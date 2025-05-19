@@ -1,0 +1,198 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17">
+  <diagram name="Page-1" id="j20LVf2KCOlHte69sGey">
+    <mxGraphModel dx="1903" dy="809" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="q-LjX733wgwyjEt8cZZn-1" value="USER" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#09555B;strokeColor=#BAC8D3;fontColor=#EEEEEE;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="400" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-2" value="Administration:" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-1">
+          <mxGeometry y="30" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-3" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;get all users: fetches all users" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-1">
+          <mxGeometry y="60" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-4" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;get a user: fetches a user by ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-1">
+          <mxGeometry y="90" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-5" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;create a user: creates a user document with required fields" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-1">
+          <mxGeometry y="120" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-6" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;update a user: updates a user by ID, must include complete data for nested fields" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-1">
+          <mxGeometry y="150" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-7" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;delete a user: deletes a user&#39;s document by ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-1">
+          <mxGeometry y="180" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-8" value="All Users:" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-1">
+          <mxGeometry y="210" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-9" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;update password: for authenticated users (JWT), needs current password" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-1">
+          <mxGeometry y="240" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-10" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;update account: for authenticated&amp;nbsp;users (JWT), to update all except password" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-1">
+          <mxGeometry y="270" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-11" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;delete account: for authenticated&amp;nbsp;users (JWT), to deactivate account" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-1">
+          <mxGeometry y="300" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-12" value="Public:" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;shadow=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-1">
+          <mxGeometry y="330" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-13" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;login: log a user in using phone number and temp code (sent via SMS) or using email and password" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-1">
+          <mxGeometry y="360" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-14" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;sign up: sign a user up either by phone (SMS verification) or email and password (email verification)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-1">
+          <mxGeometry y="390" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-15" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;forgot password: receives an email and emails a reset password link" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;shadow=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-1">
+          <mxGeometry y="420" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-16" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;reset password: resets password by providing the proper token" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-1">
+          <mxGeometry y="450" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-17" value="VISIT" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#09555B;strokeColor=#BAC8D3;fontColor=#EEEEEE;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="80" width="400" height="660" as="geometry">
+            <mxRectangle x="500" y="180" width="60" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-18" value="Administration:" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="30" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-19" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;get all visits: fetches all visits (closed or open)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="60" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-20" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;get a visit: fetches a visit by ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="90" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-21" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;create a visit: creates a visit document with required fields" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="120" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-22" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;update a visit: updates a visit by ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="150" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-23" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;delete a visit: deletes a visit document by ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="180" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-24" value="Doctor:" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="210" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-25" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;update a prescription on a visit: updates a visit&#39;s prescription by the visit ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="240" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-26" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;delete a prescription&amp;nbsp;on a visit: deletes a visit&#39;s prescription by the visit ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="270" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-27" value="Doctor / Secretary:" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="300" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-28" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;get all visits: fetches all visits (closed or open) by the doctor ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="330" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-29" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;get all visits (today): fetches all today&#39;s visits" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="360" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-30" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;close a visit: updates a visit&#39;s close status to true by the visit ID (checks if the visit belongs to the doctor by ID)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="390" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-31" value="Patient:" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="420" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-32" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;get all my visits: fetches all visits (closed or open) by the patient ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="450" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-33" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;get a visit: fetches a visit by ID (checks if it belongs to the patient by ID)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="480" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-34" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;book a visit: books a visit (grabs doctor ID from the body and user ID from the JWT)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="510" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-35" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;update a visit: updates a visit by visit ID (owner&#39;s check)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="540" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-36" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;delete a visit: deletes a visit by visit ID (owner&#39;s check)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="570" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-37" value="Public:" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="600" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-38" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;get prescription&amp;nbsp;on a visit: fetches the prescription field of a visit by visit ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-17">
+          <mxGeometry y="630" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-39" value="REVIEW" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#09555B;strokeColor=#BAC8D3;fontColor=#EEEEEE;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="80" width="400" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-40" value="Administration:" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-39">
+          <mxGeometry y="30" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-41" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;get all reviews: fetches all reviews" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-39">
+          <mxGeometry y="60" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-42" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;get a review: fetches a review by ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-39">
+          <mxGeometry y="90" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-43" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;create a review: creates a review document with required fields" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-39">
+          <mxGeometry y="120" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-44" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;update a review: updates a review by ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-39">
+          <mxGeometry y="150" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-45" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;delete a review: deletes a review document by ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-39">
+          <mxGeometry y="180" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-46" value="Patient:" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-39">
+          <mxGeometry y="210" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-47" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;get a review on a visit: fetches a patient&#39;s review on a visit by visit ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-39">
+          <mxGeometry y="240" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-48" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;write a review on a visit: creates a review on a successful-closed visit (grabs visit ID from body and patient ID from JWT with owner check)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-39">
+          <mxGeometry y="270" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-49" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;update a review on a visit: updates a patient&#39;s review on a visit" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-39">
+          <mxGeometry y="300" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-50" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;delete a review on a visit: deletes a patient&#39;s review on a visit" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-39">
+          <mxGeometry y="330" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-51" value="All Users:" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-39">
+          <mxGeometry y="360" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-52" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;get all reviews on a doctor: fetches all reviews related to a doctor by doctor ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-39">
+          <mxGeometry y="390" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-53" value="DRUG" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#09555B;strokeColor=#BAC8D3;fontColor=#EEEEEE;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="80" width="400" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-54" value="Administration:" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-53">
+          <mxGeometry y="30" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-55" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;get all drugs: fetches all drugs" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-53">
+          <mxGeometry y="60" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-56" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;get a drug: fetches a drug by ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-53">
+          <mxGeometry y="90" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-57" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;create a drug: creates a drug document with required fields" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-53">
+          <mxGeometry y="120" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-58" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;update a drug: updates a drug by ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-53">
+          <mxGeometry y="150" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-59" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;delete a drug: deletes a drug document by ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-53">
+          <mxGeometry y="180" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-60" value="Doctor:" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-53">
+          <mxGeometry y="210" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-61" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;get all drugs: fetches all drugs (filtering included)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-53">
+          <mxGeometry y="240" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="q-LjX733wgwyjEt8cZZn-62" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;get a drug: fetches a drug by ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontColor=#EEEEEE;fontFamily=Helvetica;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="q-LjX733wgwyjEt8cZZn-53">
+          <mxGeometry y="270" width="400" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

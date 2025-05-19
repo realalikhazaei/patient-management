@@ -1,0 +1,22 @@
+[
+  { "name": "Levothyroxine", "category": "hormone" },
+  { "name": "Vitamin D", "category": "vitamin" },
+  { "name": "Amoxicillin", "category": "antibiotic" },
+  { "name": "Lisinopril", "category": "ACE inhibitor" },
+  { "name": "Amphetamine/Dextroamphetamine", "category": "stimulant" },
+  { "name": "Amlodipine", "category": "calcium channel blocker" },
+  { "name": "Gabapentin", "category": "anticonvulsant" },
+  { "name": "Atorvastatin", "category": "statin" },
+  { "name": "Prednisone", "category": "corticosteroid" },
+  { "name": "Albuterol", "category": "bronchodilator" },
+  { "name": "Ibuprofen", "category": "NSAID" },
+  { "name": "Omeprazole", "category": "PPI" },
+  { "name": "Metformin", "category": "antidiabetic" },
+  { "name": "Metoprolol", "category": "beta-blocker" },
+  { "name": "Hydrochlorothiazide", "category": "diuretic" },
+  { "name": "Simvastatin", "category": "statin" },
+  { "name": "Sertraline", "category": "SSRI" },
+  { "name": "Zolpidem", "category": "hypnotic" },
+  { "name": "Clopidogrel", "category": "antiplatelet" },
+  { "name": "Montelukast", "category": "leukotriene antagonist" }
+]
