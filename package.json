@@ -8,7 +8,7 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "start:prod": "cross-env NODE_ENV=production && nodemon server.js",
+    "start:prod": "cross-env NODE_ENV=production nodemon server.js",
     "lint": "eslint",
     "debug": "ndb server.js"
   },

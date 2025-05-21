@@ -4,6 +4,7 @@ const drugSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Drug name is a required field'],
+    unique: [true, 'This drug already exists'],
     lowercase: true,
   },
   image: {

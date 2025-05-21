@@ -1,6 +1,17 @@
 const AppError = require('../utils/appError');
+const APIFeatures = require('../utils/apiFeatures');
 
-exports.getAll = Model => async (req, res, next) => {};
+exports.getAll = Model => async (req, res, next) => {
+  const query = { ...req.query, ...req.params };
+  const features = new APIFeatures(Model.find(), query).filter().sort().projection().pagination();
+  const documents = await features.queryObj;
+
+  res.status(200).json({
+    status: 'success',
+    results: documents.length,
+    data: documents,
+  });
+};
 
 exports.getOne = Model => async (req, res, next) => {
   const document = await Model.findOne(req.params);
@@ -22,7 +33,7 @@ exports.createOne = Model => async (req, res, next) => {
 };
 
 exports.updateOne = Model => async (req, res, next) => {
-  const document = await Model.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+  const document = await Model.findOneAndUpdate(req.params, req.body, { new: true, runValidators: true });
   if (!document) return next(new AppError('There is no document with this ID', 404));
 
   res.status(200).json({
@@ -32,7 +43,7 @@ exports.updateOne = Model => async (req, res, next) => {
 };
 
 exports.deleteOne = Model => async (req, res, next) => {
-  const document = await Model.findByIdAndDelete(req.params.id);
+  const document = await Model.findOneAndDelete(req.params);
   if (!document) return next(new AppError('There is no document with this ID', 404));
 
   res.status(204).json({
