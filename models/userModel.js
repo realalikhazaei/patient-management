@@ -65,9 +65,10 @@ const userSchema = new mongoose.Schema(
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
+    phoneVerification: Number,
     idCard: {
       type: String,
-      required: [true, 'Please provide your ID card number'],
+      unique: [true, 'This ID card number already exists'],
       validate: {
         validator: function (val) {
           return val.length === 10;
@@ -77,7 +78,6 @@ const userSchema = new mongoose.Schema(
     },
     birthday: {
       type: Date,
-      required: [true, 'Please provide your birthday'],
       validate: {
         validator: function (val) {
           return val < Date.now() && val.getYear() < 120;
@@ -100,7 +100,6 @@ const userSchema = new mongoose.Schema(
     doctorOptions: {
       specification: {
         type: String,
-        required: [true, 'Please provide a specification'],
         enum: {
           values: [
             'general',
@@ -134,10 +133,21 @@ const userSchema = new mongoose.Schema(
           ],
           message: 'Please provide a valid specification',
         },
+        validate: {
+          validator: function (val) {
+            return this.role === 'doctor' && !val ? false : true;
+          },
+          message: 'Please provide a specification',
+        },
       },
       mcNumber: {
         type: String,
-        required: [true, 'Please provide your medical council ID'],
+        validate: {
+          validator: function (val) {
+            return this.role === 'doctor' && !val ? false : true;
+          },
+          message: 'Please provide your medical council ID',
+        },
       },
       ratingsAverage: {
         type: Number,
@@ -162,7 +172,7 @@ const userSchema = new mongoose.Schema(
       },
       visitRange: {
         type: [String],
-        required: [true, 'Please provide a visit time range'],
+        default: ['8:00', '12:00'],
       },
       visitExceptions: [Date],
     },
