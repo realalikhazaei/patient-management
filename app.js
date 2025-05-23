@@ -8,11 +8,26 @@ const globalErrorHandler = require('./controllers/errorController');
 
 const app = express();
 
+//Logger middleware
+app.use(morgan('dev'));
+
 //Body-parser with body payload limit
 app.use(express.json({ limit: '10kb' }));
 
-//Logger middleware
-app.use(morgan('dev'));
+//Filter-out unwanted data
+app.use((req, res, next) => {
+  const filterOut = [
+    'passwordChangedAt',
+    'passwordResetToken',
+    'passwordResetExpires',
+    'otp',
+    'otpExpires',
+    'role',
+    'active',
+  ];
+  filterOut.forEach(el => delete req.body?.[el]);
+  next();
+});
 
 //Routers
 app.use('/api/v1/drugs', drugRouter);

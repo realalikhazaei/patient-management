@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const isEmail = require('validator/lib/isEmail');
 
 const userSchema = new mongoose.Schema(
@@ -65,7 +66,8 @@ const userSchema = new mongoose.Schema(
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
-    phoneVerification: Number,
+    otp: String,
+    otpExpires: Date,
     idCard: {
       type: String,
       unique: [true, 'This ID card number already exists'],
@@ -183,6 +185,32 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
+
+//Create OTP
+userSchema.statics.createOTP = async function () {
+  const otp = String(Math.round(Math.random() * 899999 + 100000));
+  this.otp = await bcrypt.hash(otp, process.env.BCRYPT_COST);
+  console.log(otp); //eslint-disable-line
+};
+
+//Verify OTP
+userSchema.statics.verifyOTP = async function (otp) {
+  const verify = await bcrypt.compare(otp, this.otp);
+  return verify;
+};
+
+//Encrypt password
+userSchema.pre('save', async function (next) {
+  this.password = await bcrypt.hash(this.password, process.env.BCRYPT_COST);
+  this.passwordConfirm = undefined;
+  next();
+});
+
+//Verify password
+userSchema.statics.verifyPassword = async function (password) {
+  const correct = await bcrypt.compare(password, this.password);
+  return correct;
+};
 
 const User = mongoose.model('User', userSchema);
 

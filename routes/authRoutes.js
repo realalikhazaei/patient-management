@@ -3,8 +3,8 @@ const {
   editPhoneNumber,
   getOTP,
   signupPhone,
-  signupEmail,
   loginPhone,
+  signupEmail,
   loginEmail,
 } = require('../controllers/authController');
 
