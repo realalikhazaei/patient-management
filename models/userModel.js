@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const isEmail = require('validator/lib/isEmail');
@@ -9,7 +10,7 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Please provide your name'],
       validate: {
         validator: function (val) {
-          return val.split(' ').length > 2;
+          return val.split(' ').length >= 2;
         },
         message: 'Please provide your full name',
       },
@@ -20,38 +21,21 @@ const userSchema = new mongoose.Schema(
     },
     phone: {
       type: String,
-      unique: [true, 'This phone number already exists'],
       minlength: [10, 'A phone number cannot be less than 10 characters'],
       set: function (val) {
         return val.replace(/^(?:\+98|98|0)/, '');
       },
-      validate: {
-        validator: function (val) {
-          return val || this.email;
-        },
-        message: 'Please provide your phone number',
-      },
     },
     email: {
       type: String,
-      unique: [true, 'This email already exists'],
       maxlength: [100, 'An email address cannot be more than 100 characters'],
-      validate: [
-        {
-          validator: isEmail,
-          message: 'Please provide a valid email address',
-        },
-        {
-          validator: function (val) {
-            return val || this.phone;
-          },
-          message: 'Please provide your email address',
-        },
-      ],
+      validate: {
+        validator: isEmail,
+        message: 'Please provide a valid email address',
+      },
     },
     password: {
       type: String,
-      required: [true, 'Please provide a password'],
       minlength: [8, 'Password cannot be less than 8 characters'],
     },
     passwordConfirm: {
@@ -60,8 +44,8 @@ const userSchema = new mongoose.Schema(
         validator: function (val) {
           return val === this.password;
         },
+        message: 'Your passwords do not match',
       },
-      message: 'Your passwords do not match',
     },
     passwordChangedAt: Date,
     passwordResetToken: String,
@@ -186,30 +170,60 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-//Create OTP
-userSchema.statics.createOTP = async function () {
-  const otp = String(Math.round(Math.random() * 899999 + 100000));
-  this.otp = await bcrypt.hash(otp, process.env.BCRYPT_COST);
-  console.log(otp); //eslint-disable-line
-};
-
-//Verify OTP
-userSchema.statics.verifyOTP = async function (otp) {
-  const verify = await bcrypt.compare(otp, this.otp);
-  return verify;
-};
+//Compound unique index for phone and email
+userSchema.index({ phone: 1, email: 1 }, { unique: true });
 
 //Encrypt password
 userSchema.pre('save', async function (next) {
-  this.password = await bcrypt.hash(this.password, process.env.BCRYPT_COST);
+  if (!this.isModified('password')) return next();
+  this.password = await bcrypt.hash(this.password, +process.env.BCRYPT_COST);
   this.passwordConfirm = undefined;
   next();
 });
 
+//Set password change time
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
+  this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
+
+//Remove doctorOptions for non-doctor roles
+userSchema.pre('save', function (next) {
+  if (this.role !== 'doctor') this.doctorOptions = undefined;
+  next();
+});
+
+//Create OTP
+userSchema.methods.createOTP = async function () {
+  const otp = String(Math.round(Math.random() * 899999 + 100000));
+  this.otp = await bcrypt.hash(otp, +process.env.BCRYPT_COST);
+  this.otpExpires = new Date(Date.now() + process.env.OTP_EXPIRES_MIN * 60 * 1000);
+  console.log(otp); //eslint-disable-line
+};
+
+//Verify OTP
+userSchema.methods.verifyOTP = async function (otp) {
+  const correct = await bcrypt.compare(otp, this.otp);
+  return correct;
+};
+
 //Verify password
-userSchema.statics.verifyPassword = async function (password) {
+userSchema.methods.verifyPassword = async function (password) {
   const correct = await bcrypt.compare(password, this.password);
   return correct;
+};
+
+//Check password change time
+userSchema.methods.passwordChangedAfter = function (issueTime) {
+  return this.passwordChangedAt.getTime() > issueTime * 1000;
+};
+
+userSchema.methods.createPasswordResetToken = function () {
+  const token = crypto.randomBytes(32).toString('hex');
+  this.passwordResetToken = crypto.createHash('sha256').update(token).digest('hex');
+  this.passwordResetExpires = new Date(Date.now() + process.env.PASS_RESET_EXPIRES_MIN * 60 * 1000);
+  return token;
 };
 
 const User = mongoose.model('User', userSchema);
