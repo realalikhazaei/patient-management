@@ -47,8 +47,10 @@ const protectRoute = async (req, res, next) => {
   const user = await User.findById(payload.id);
   if (!user) return next(new AppError('Your account has been deactivated. Please contact support.', 404));
 
-  const passwordChanged = user.passwordChangedAfter(payload.iat);
-  if (passwordChanged) return next(new AppError('Your password has been changed. Please login again.', 401));
+  if (user.password) {
+    const passwordChanged = user.passwordChangedAfter(payload.iat);
+    if (passwordChanged) return next(new AppError('Your password has been changed. Please login again.', 401));
+  }
 
   req.user = user;
   next();
@@ -127,7 +129,7 @@ const forgotPassword = async (req, res, next) => {
 
   const token = await user.createPasswordResetToken();
   const url = `${req.protocol}://${req.get('host')}/api/v1/auth/reset-password/${token}`;
-  const text = `This is your password reset token:\n${url}\nPlease ignore this message if you hadn't asked for one.`;
+  const text = `Here is your password reset token:\n${url}\n\nPlease ignore this message if you haven't asked for one.`;
 
   try {
     await new Email(user, text).sendResetPassword();
@@ -155,10 +157,13 @@ const resetPassword = async (req, res, next) => {
   const user = await User.findOne({ passwordResetToken: hashedToken, passwordResetExpires: { $gte: Date.now() } });
   if (!user) return next(new AppError('Your password reset link is either wrong or expired. Please try again.', 401));
 
-  const { password, passwordConfrim } = req.body;
+  const { password, passwordConfirm } = req.body;
+  if (!password) return next(new AppError('Please provide a password', 400));
+  if (!passwordConfirm) return next(new AppError('Please confirm your password', 400));
   user.password = password;
-  user.passwordConfirm = passwordConfrim;
-  await user.save({ validateBeforeSave: true });
+  user.passwordConfirm = passwordConfirm;
+  await user.save();
+
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
   await user.save();
@@ -166,9 +171,38 @@ const resetPassword = async (req, res, next) => {
   await signSendToken(user._id, req, res, 'Your password has been reset successfully.');
 };
 
-const updatePassword = async (req, res, next) => {};
+const updatePassword = async (req, res, next) => {
+  const user = await User.findById(req.user?._id);
 
-const setPassword = async (req, res, next) => {};
+  const { currentPassword, newPassword, newPasswordConfirm } = req.body;
+  if (!currentPassword) return next(new AppError('Please provide your current password', 400));
+  if (!newPassword) return next(new AppError('Please provide a password', 400));
+  if (!newPasswordConfirm) return next(new AppError('Please confirm your password', 400));
+
+  const correct = await user.verifyPassword(currentPassword);
+  if (!correct) return next(new AppError('Your current password is wrong.', 401));
+
+  user.password = newPassword;
+  user.passwordConfirm = newPasswordConfirm;
+  await user.save();
+
+  await signSendToken(user._id, req, res, 'Your password has been changed successfully');
+};
+
+const setPassword = async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+
+  if (user.password) return next(new AppError('You cannot use this route to change your password.', 400));
+
+  const { password, passwordConfirm } = req.body;
+  if (!password) return next(new AppError('Please provide a password', 400));
+  if (!passwordConfirm) return next(new AppError('Please confirm your password', 400));
+  user.password = password;
+  user.passwordConfirm = passwordConfirm;
+  await user.save();
+
+  await signSendToken(user._id, req, res, 'Your password has been set successfully');
+};
 
 module.exports = {
   editPhoneNumber,
