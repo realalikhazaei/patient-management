@@ -25,7 +25,7 @@ router.post('/login/phone', loginPhone);
 router.post('/login/email', loginEmail);
 
 router.post('/forgot-password', forgotPassword);
-router.patch('/reset-password', resetPassword);
+router.patch('/reset-password/:token', resetPassword);
 
 router.use(protectRoute);
 
