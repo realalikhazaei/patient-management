@@ -1,7 +1,10 @@
 const express = require('express');
 const { getAllUsers, getUser, createUser, updateUser, deleteUser, updateMe } = require('../controllers/userController');
+const { protectRoute } = require('../controllers/authController');
 
 const router = express.Router();
+
+router.use(protectRoute);
 
 router.patch('/update-account', updateMe);
 

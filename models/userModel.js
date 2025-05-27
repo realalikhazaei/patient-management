@@ -7,7 +7,6 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'Please provide your name'],
       validate: {
         validator: function (val) {
           return val.split(' ').length >= 2;
@@ -22,13 +21,20 @@ const userSchema = new mongoose.Schema(
     phone: {
       type: String,
       minlength: [10, 'A phone number cannot be less than 10 characters'],
-      set: function (val) {
-        return val.replace(/^(?:\+98|98|0)/, '');
-      },
+      unique: [true, 'This phone number already exists.'],
+      sparse: true,
+    },
+    newPhone: {
+      type: String,
+      minlength: [10, 'A phone number cannot be less than 10 characters'],
+      unique: [true, 'This phone number already exists.'],
+      sparse: true,
     },
     email: {
       type: String,
       maxlength: [100, 'An email address cannot be more than 100 characters'],
+      unique: [true, 'This email address already exists.'],
+      sparse: true,
       validate: {
         validator: isEmail,
         message: 'Please provide a valid email address',
@@ -54,7 +60,6 @@ const userSchema = new mongoose.Schema(
     otpExpires: Date,
     idCard: {
       type: String,
-      unique: [true, 'This ID card number already exists'],
       validate: {
         validator: function (val) {
           return val.length === 10;
@@ -170,9 +175,6 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-//Compound unique index for phone and email
-userSchema.index({ phone: 1, email: 1 }, { unique: true });
-
 //Encrypt password
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
@@ -195,16 +197,17 @@ userSchema.pre('save', function (next) {
 });
 
 //Create OTP
-userSchema.methods.createOTP = async function () {
+userSchema.methods.createOTP = async function (phone) {
   const otp = String(Math.round(Math.random() * 899999 + 100000));
   this.otp = await bcrypt.hash(otp, +process.env.BCRYPT_COST);
   this.otpExpires = new Date(Date.now() + process.env.OTP_EXPIRES_MIN * 60 * 1000);
-  console.log(otp); //eslint-disable-line
+  console.log(`${otp} one-time password for ${phone} phone number.`);
 };
 
 //Verify OTP
 userSchema.methods.verifyOTP = async function (otp) {
-  const correct = await bcrypt.compare(otp, this.otp);
+  let correct = false;
+  if (this.otp) correct = await bcrypt.compare(otp, this.otp);
   return correct;
 };
 

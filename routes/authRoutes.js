@@ -9,6 +9,7 @@ const {
   loginEmail,
   forgotPassword,
   resetPassword,
+  updatePhone,
   updatePassword,
   setPassword,
 } = require('../controllers/authController');
@@ -29,7 +30,8 @@ router.patch('/reset-password/:token', resetPassword);
 
 router.use(protectRoute);
 
+router.patch('/update-phone', updatePhone);
 router.patch('/update-password', updatePassword);
-router.post('/set-password', setPassword);
+router.patch('/set-password', setPassword);
 
 module.exports = router;

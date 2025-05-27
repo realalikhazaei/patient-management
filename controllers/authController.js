@@ -32,6 +32,7 @@ const signSendToken = async (id, req, res, message, statusCode = 200) => {
 
 const editPhoneNumber = (req, res, next) => {
   if (req.body.phone) req.body.phone = req.body.phone.replace(/^(?:\+98|98|0)/, '');
+  if (req.body.newPhone) req.body.newPhone = req.body.newPhone.replace(/^(?:\+98|98|0)/, '');
   next();
 };
 
@@ -64,15 +65,28 @@ const restrictTo = (...roles) => {
 };
 
 const getOTP = async (req, res, next) => {
-  const user = await User.findOne({ phone: req.body.phone });
-  if (!user) return next(new AppError('There is no account with this phone number. Please sign up first.', 404));
+  const { phone, newPhone } = req.body;
 
-  await user.createOTP();
-  await user.save({ validateBeforeSave: false });
+  if (newPhone) {
+    const duplicateNumber = await User.findOne({ phone: newPhone });
+    if (duplicateNumber) return next(new AppError('This phone number has been used. Please try another one.'));
+  }
+
+  let user = await User.findOne({ phone });
+  if (user?.newPhone) {
+    user.newPhone = undefined;
+  }
+  if (user && newPhone) {
+    user.newPhone = newPhone;
+  }
+  if (!user) user = await User.create({ phone });
+
+  await user.createOTP(newPhone || phone);
+  await user.save();
 
   res.status(200).json({
     status: 'success',
-    message: 'A one-time password has been sent to your phone.',
+    message: 'A one-time password has been sent to your phone number.',
   });
 };
 
@@ -89,13 +103,17 @@ const signupPhone = async (req, res, next) => {
 
 const loginPhone = async (req, res, next) => {
   const user = await User.findOne({ phone: req.body.phone });
-  if (!user) return next(new AppError('There is no account with thin phone number. Please sign up first.', 404));
+  if (!user) return next(new AppError('There is no account with this phone number. Please sign up first.', 404));
 
   const expiredOTP = user.otpExpires < Date.now();
   if (expiredOTP) return next(new AppError('Your one-time password has expired. Please try again.', 401));
 
   const correctOTP = await user.verifyOTP(req.body.otp);
   if (!correctOTP) return next(new AppError('Your one-time password is wrong. Please try again.', 401));
+
+  user.otp = undefined;
+  user.otpExpires = undefined;
+  await user.save({ validateBeforeSave: false });
 
   await signSendToken(user._id, req, res, 'You have been logged in successfully.');
 };
@@ -171,6 +189,24 @@ const resetPassword = async (req, res, next) => {
   await signSendToken(user._id, req, res, 'Your password has been reset successfully.');
 };
 
+const updatePhone = async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+
+  const expiredOTP = user.otpExpires < Date.now();
+  if (expiredOTP) return next(new AppError('Your one-time password has expired. Please try again.', 401));
+
+  const correctOTP = await user.verifyOTP(req.body.otp);
+  if (!correctOTP) return next(new AppError('Your one-time password is wrong. Please try again.', 401));
+
+  if (user.newPhone) user.phone = user.newPhone;
+  user.newPhone = undefined;
+  user.otp = undefined;
+  user.otpExpires = undefined;
+  await user.save({ validateBeforeSave: false });
+
+  await signSendToken(user._id, req, res, 'Your phone number has been updated successfully');
+};
+
 const updatePassword = async (req, res, next) => {
   const user = await User.findById(req.user?._id);
 
@@ -215,6 +251,7 @@ module.exports = {
   loginEmail,
   forgotPassword,
   resetPassword,
+  updatePhone,
   updatePassword,
   setPassword,
 };
