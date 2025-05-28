@@ -3,10 +3,9 @@ const {
   editPhoneNumber,
   protectRoute,
   getOTP,
-  signupPhone,
-  loginPhone,
   signupEmail,
   loginEmail,
+  loginPhone,
   forgotPassword,
   resetPassword,
   updatePhone,
@@ -20,10 +19,9 @@ router.use(editPhoneNumber);
 
 router.post('/otp', getOTP);
 
-router.post('/sign-up/phone', signupPhone);
 router.post('/sign-up/email', signupEmail);
-router.post('/login/phone', loginPhone);
 router.post('/login/email', loginEmail);
+router.post('/login/phone', loginPhone);
 
 router.post('/forgot-password', forgotPassword);
 router.patch('/reset-password/:token', resetPassword);

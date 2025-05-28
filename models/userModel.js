@@ -1,6 +1,5 @@
-const crypto = require('crypto');
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+
 const isEmail = require('validator/lib/isEmail');
 
 const userSchema = new mongoose.Schema(
@@ -40,24 +39,6 @@ const userSchema = new mongoose.Schema(
         message: 'Please provide a valid email address',
       },
     },
-    password: {
-      type: String,
-      minlength: [8, 'Password cannot be less than 8 characters'],
-    },
-    passwordConfirm: {
-      type: String,
-      validate: {
-        validator: function (val) {
-          return val === this.password;
-        },
-        message: 'Your passwords do not match',
-      },
-    },
-    passwordChangedAt: Date,
-    passwordResetToken: String,
-    passwordResetExpires: Date,
-    otp: String,
-    otpExpires: Date,
     idCard: {
       type: String,
       unique: [true, 'This ID card already exists'],
@@ -77,18 +58,6 @@ const userSchema = new mongoose.Schema(
         },
         message: 'Please enter a valid range for birthday',
       },
-    },
-    role: {
-      type: String,
-      default: 'patient',
-      enum: {
-        values: ['patient', 'secretary', 'doctor', 'admin'],
-        message: 'User role can be either patient, secretary, doctor or admin',
-      },
-    },
-    active: {
-      type: Boolean,
-      default: true,
     },
     doctorOptions: {
       specification: {
@@ -177,19 +146,11 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-//Encrypt password
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
-  this.password = await bcrypt.hash(this.password, +process.env.BCRYPT_COST);
-  this.passwordConfirm = undefined;
-  next();
-});
-
-//Set password change time
-userSchema.pre('save', function (next) {
-  if (!this.isModified('password') || this.isNew) return next();
-  this.passwordChangedAt = Date.now() - 1000;
-  next();
+//Virtual reference
+userSchema.virtual('auth', {
+  ref: 'Auth',
+  localField: '_id',
+  foreignField: 'userId',
 });
 
 //Remove doctorOptions for non-doctor roles
@@ -197,39 +158,6 @@ userSchema.pre('save', function (next) {
   if (this.role !== 'doctor') this.doctorOptions = undefined;
   next();
 });
-
-//Create OTP
-userSchema.methods.createOTP = async function (phone) {
-  const otp = String(Math.round(Math.random() * 899999 + 100000));
-  this.otp = await bcrypt.hash(otp, +process.env.BCRYPT_COST);
-  this.otpExpires = new Date(Date.now() + process.env.OTP_EXPIRES_MIN * 60 * 1000);
-  console.log(`${otp} one-time password for ${phone} phone number.`);
-};
-
-//Verify OTP
-userSchema.methods.verifyOTP = async function (otp) {
-  let correct = false;
-  if (this.otp) correct = await bcrypt.compare(otp, this.otp);
-  return correct;
-};
-
-//Verify password
-userSchema.methods.verifyPassword = async function (password) {
-  const correct = await bcrypt.compare(password, this.password);
-  return correct;
-};
-
-//Check password change time
-userSchema.methods.passwordChangedAfter = function (issueTime) {
-  return this.passwordChangedAt?.getTime() > issueTime * 1000;
-};
-
-userSchema.methods.createPasswordResetToken = function () {
-  const token = crypto.randomBytes(32).toString('hex');
-  this.passwordResetToken = crypto.createHash('sha256').update(token).digest('hex');
-  this.passwordResetExpires = new Date(Date.now() + process.env.PASS_RESET_EXPIRES_MIN * 60 * 1000);
-  return token;
-};
 
 const User = mongoose.model('User', userSchema);
 
