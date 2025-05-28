@@ -14,8 +14,6 @@ const deleteUser = factory.deleteOne(User);
 const updateMe = async (req, res, next) => {
   const { name, photo, email, birthday } = req.body;
 
-  console.log({ name, photo, email, birthday });
-
   const user = await User.findByIdAndUpdate(
     req.user._id,
     { name, photo, email, birthday },
