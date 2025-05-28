@@ -60,6 +60,8 @@ const userSchema = new mongoose.Schema(
     otpExpires: Date,
     idCard: {
       type: String,
+      unique: [true, 'This ID card already exists'],
+      sparse: true,
       validate: {
         validator: function (val) {
           return val.length === 10;
@@ -219,7 +221,7 @@ userSchema.methods.verifyPassword = async function (password) {
 
 //Check password change time
 userSchema.methods.passwordChangedAfter = function (issueTime) {
-  return this.passwordChangedAt.getTime() > issueTime * 1000;
+  return this.passwordChangedAt?.getTime() > issueTime * 1000;
 };
 
 userSchema.methods.createPasswordResetToken = function () {
