@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 
 const Email = class {
   constructor(user, text) {
-    this.name = user.name.split(' ')[0];
+    this.name = user.name?.split(' ')[0] || 'Dear';
     this.from = process.env.MAILTRAP_FROM;
     this.to = user.email;
     this.text = text;

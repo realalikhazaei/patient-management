@@ -144,8 +144,7 @@ const loginPhone = async (req, res, next) => {
 
   auth.otp = undefined;
   auth.otpExpires = undefined;
-  //TODO test if works without the validateBeforeSave property
-  await auth.save({ validateBeforeSave: false });
+  await auth.save();
 
   await signSendToken(user._id, req, res, 'You have been logged in successfully.');
 };
@@ -217,8 +216,8 @@ const updatePhone = async (req, res, next) => {
   auth.otp = undefined;
   auth.otpExpires = undefined;
   //TODO test if works without the validateBeforeSave property
-  await user.save({ validateBeforeSave: false });
-  await auth.save({ validateBeforeSave: false });
+  await user.save();
+  await auth.save();
 
   await signSendToken(user._id, req, res, 'Your phone number has been updated successfully');
 };
