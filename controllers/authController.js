@@ -2,7 +2,6 @@ const crypto = require('crypto');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
-const Auth = require('../models/authModel');
 const AppError = require('../utils/appError');
 const Email = require('../utils/email');
 
@@ -39,9 +38,9 @@ const editPhoneNumber = (req, res, next) => {
 
 const protectRoute = async (req, res, next) => {
   let token;
-  const authHeader = req.headers?.authorization;
-  if (authHeader && authHeader.startsWith('Bearer')) token = authHeader.split(' ')[1];
-  if (req.cookies?.jwt) token = req.cookies.jwt;
+  if (req.headers.authorization?.startsWith('Bearer') || req.cookies?.jwt) {
+    token = req.headers.authorization?.split(' ')[1] || req.cookies?.jwt;
+  }
   if (!token) return next(new AppError('Please login first to access this route', 401));
 
   const payload = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
@@ -49,10 +48,8 @@ const protectRoute = async (req, res, next) => {
   const user = await User.findById(payload.id);
   if (!user) return next(new AppError('Your account has been deactivated. Please contact support.', 404));
 
-  const auth = await Auth.findOne({ userId: user._id });
-
-  if (auth.password) {
-    const passwordChanged = auth.passwordChangedAfter(payload.iat);
+  if (user.password) {
+    const passwordChanged = user.passwordChangedAfter(payload.iat);
     if (passwordChanged) return next(new AppError('Your password has been changed. Please login again.', 401));
   }
 
@@ -62,8 +59,7 @@ const protectRoute = async (req, res, next) => {
 
 const restrictTo = (...roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.auth.role))
-      return next(new AppError('You are not allowed to access this route.', 403));
+    if (!roles.includes(req.user.role)) return next(new AppError('You are not allowed to access this route.', 403));
     return next();
   };
 };
@@ -72,7 +68,6 @@ const getOTP = async (req, res, next) => {
   const { phone, newPhone } = req.body;
 
   let user;
-  let auth;
 
   //Get logged-in/logged-out user
   if (req.headers.authorization?.startsWith('Bearer') || req.cookies?.jwt) {
@@ -94,14 +89,10 @@ const getOTP = async (req, res, next) => {
   //Sign-up user with phone number
   if (!user) {
     user = await User.create({ phone });
-    auth = await Auth.create({ userId: user._id });
   }
 
-  auth = await Auth.findOne({ userId: user._id });
-
-  await auth.createOTP(newPhone || phone);
+  await user.createOTP(newPhone || phone);
   await user.save();
-  await auth.save();
 
   res.status(200).json({
     status: 'success',
@@ -115,8 +106,7 @@ const signupEmail = async (req, res, next) => {
   if (!password) return next(new AppError('Please provide a password', 400));
   if (!passwordConfirm) return next(new AppError('Please confirm your password', 400));
 
-  const user = await User.create({ email });
-  const auth = await Auth.create({ userId: user._id, password, passwordConfirm });
+  const user = await User.create({ email, password, passwordConfirm });
 
   await signSendToken(user._id, req, res, 'Your account has been created successfully.', 201);
 };
@@ -128,10 +118,7 @@ const loginEmail = async (req, res, next) => {
 
   const user = await User.findOne({ email });
 
-  let auth;
-  if (user) auth = await Auth.findOne({ userId: user._id });
-
-  const correct = await auth?.verifyPassword(password);
+  const correct = await user?.verifyPassword(password);
   if (!user || !correct) return next(new AppError('There is no account with this email and password.', 404));
 
   await signSendToken(user._id, req, res, 'You have been logged in successfully.');
@@ -143,17 +130,15 @@ const loginPhone = async (req, res, next) => {
   const user = await User.findOne({ phone });
   if (!user) return next(new AppError('There is no account with this phone number. Please sign up first.', 404));
 
-  const auth = await Auth.findOne({ userId: user._id });
-
-  const expiredOTP = auth.otpExpires < Date.now();
+  const expiredOTP = user.otpExpires < Date.now();
   if (expiredOTP) return next(new AppError('Your one-time password has expired. Please try again.', 401));
 
-  const correctOTP = await auth.verifyOTP(otp);
+  const correctOTP = await user.verifyOTP(otp);
   if (!correctOTP) return next(new AppError('Your one-time password is wrong. Please try again.', 401));
 
-  auth.otp = undefined;
-  auth.otpExpires = undefined;
-  await auth.save();
+  user.otp = undefined;
+  user.otpExpires = undefined;
+  await user.save();
 
   await signSendToken(user._id, req, res, 'You have been logged in successfully.');
 };
@@ -163,19 +148,17 @@ const forgotPassword = async (req, res, next) => {
   const user = await User.findOne({ email });
   if (!user) return next(new AppError('There is no user with this email address', 404));
 
-  const auth = await Auth.findOne({ userId: user._id });
-
-  const token = await auth.createPasswordResetToken();
+  const token = await user.createPasswordResetToken();
   const url = `${req.protocol}://${req.get('host')}/api/v1/auth/reset-password/${token}`;
   const text = `Here is your password reset token:\n${url}\n\nPlease ignore this message if you haven't asked for one.`;
 
   try {
     await new Email(user, text).sendResetPassword();
-    await auth.save();
+    await user.save();
   } catch (err) {
-    auth.passwordResetToken = undefined;
-    auth.passwordResetExpires = undefined;
-    await auth.save();
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save();
 
     return res.status(500).json({
       status: 'error',
@@ -193,74 +176,73 @@ const resetPassword = async (req, res, next) => {
   const { token } = req.params;
   const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
-  const auth = await Auth.findOne({ passwordResetToken: hashedToken, passwordResetExpires: { $gte: Date.now() } });
-  if (!auth) return next(new AppError('Your password reset link is either wrong or expired. Please try again.', 401));
+  const user = await User.findOne({ passwordResetToken: hashedToken, passwordResetExpires: { $gte: Date.now() } });
+  if (!user) return next(new AppError('Your password reset link is either wrong or expired. Please try again.', 401));
 
   const { password, passwordConfirm } = req.body;
   if (!password) return next(new AppError('Please provide a password', 400));
   if (!passwordConfirm) return next(new AppError('Please confirm your password', 400));
-  auth.password = password;
-  auth.passwordConfirm = passwordConfirm;
-  await auth.save();
+  user.password = password;
+  user.passwordConfirm = passwordConfirm;
+  await user.save();
 
-  auth.passwordResetToken = undefined;
-  auth.passwordResetExpires = undefined;
-  await auth.save();
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+  await user.save();
 
-  await signSendToken(auth.userId, req, res, 'Your password has been reset successfully.');
+  await signSendToken(user._id, req, res, 'Your password has been reset successfully.');
 };
 
 const updatePhone = async (req, res, next) => {
   const user = await User.findById(req.user._id);
-  const auth = await Auth.findOne({ userId: user._id });
 
-  const expiredOTP = auth.otpExpires < Date.now();
+  const expiredOTP = user.otpExpires < Date.now();
   if (expiredOTP) return next(new AppError('Your one-time password has expired. Please try again.', 401));
 
-  const correctOTP = await auth.verifyOTP(req.body.otp);
+  const correctOTP = await user.verifyOTP(req.body.otp);
   if (!correctOTP) return next(new AppError('Your one-time password is wrong. Please try again.', 401));
 
   if (user.newPhone) user.phone = user.newPhone;
   user.newPhone = undefined;
-  auth.otp = undefined;
-  auth.otpExpires = undefined;
+  user.otp = undefined;
+  user.otpExpires = undefined;
   await user.save();
-  await auth.save();
 
   await signSendToken(user._id, req, res, 'Your phone number has been updated successfully');
 };
 
 const updatePassword = async (req, res, next) => {
-  const auth = await Auth.findOne({ userId: req.user._id });
+  const user = await User.findById(req.user._id);
 
   const { currentPassword, newPassword, newPasswordConfirm } = req.body;
   if (!currentPassword) return next(new AppError('Please provide your current password', 400));
   if (!newPassword) return next(new AppError('Please provide a password', 400));
   if (!newPasswordConfirm) return next(new AppError('Please confirm your password', 400));
 
-  const correct = await auth.verifyPassword(currentPassword);
+  const correct = await user.verifyPassword(currentPassword);
   if (!correct) return next(new AppError('Your current password is wrong.', 401));
 
-  auth.password = newPassword;
-  auth.passwordConfirm = newPasswordConfirm;
-  await auth.save();
+  user.password = newPassword;
+  user.passwordConfirm = newPasswordConfirm;
+  await user.save();
 
-  await signSendToken(auth.userId, req, res, 'Your password has been changed successfully');
+  await signSendToken(user._id, req, res, 'Your password has been changed successfully');
 };
 
 const setPassword = async (req, res, next) => {
-  const auth = await Auth.findOne({ userId: req.user._id });
+  const user = await User.findById(req.user._id);
 
-  if (auth.password) return next(new AppError('You cannot use this route to change your password.', 400));
+  if (user.password) return next(new AppError('You cannot use this route to change your password.', 400));
 
   const { password, passwordConfirm } = req.body;
   if (!password) return next(new AppError('Please provide a password', 400));
   if (!passwordConfirm) return next(new AppError('Please confirm your password', 400));
-  auth.password = password;
-  auth.passwordConfirm = passwordConfirm;
-  await auth.save();
 
-  await signSendToken(auth.userId, req, res, 'Your password has been set successfully');
+  user.password = password;
+  user.passwordConfirm = passwordConfirm;
+  await user.save();
+
+  await signSendToken(user._id, req, res, 'Your password has been set successfully');
 };
 
 module.exports = {
