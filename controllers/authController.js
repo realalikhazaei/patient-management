@@ -71,25 +71,34 @@ const restrictTo = (...roles) => {
 const getOTP = async (req, res, next) => {
   const { phone, newPhone } = req.body;
 
-  if (newPhone) {
-    const duplicateNumber = await User.findOne({ phone: newPhone });
-    if (duplicateNumber) return next(new AppError('This phone number is already in use. Please try another one.'));
-  }
-
-  let user = await User.findOne({ phone });
+  let user;
   let auth;
-  if (user?.newPhone) {
-    user.newPhone = undefined;
-  }
-  if (user && newPhone) {
-    user.newPhone = newPhone;
-  }
+
+  //Get logged-in/logged-out user
+  if (req.headers.authorization?.startsWith('Bearer') || req.cookies?.jwt) {
+    const token = req.headers.authorization?.split(' ')[1] || req.cookies?.jwt;
+    const payload = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    user = await User.findById(payload.id);
+  } else user = await User.findOne({ phone });
+
+  //Checks uniqueness of newPhone
+  if (newPhone && user?.phone === newPhone)
+    return next(new AppError('This phone number is already in use. Please try another one.'));
+
+  //Secure newPhone field
+  if (user?.newPhone) user.newPhone = undefined;
+
+  //Update/Add phone number
+  if (user && newPhone) user.newPhone = newPhone;
+
+  //Sign-up user with phone number
   if (!user) {
     user = await User.create({ phone });
     auth = await Auth.create({ userId: user._id });
   }
 
   auth = await Auth.findOne({ userId: user._id });
+
   await auth.createOTP(newPhone || phone);
   await user.save();
   await auth.save();
@@ -215,7 +224,6 @@ const updatePhone = async (req, res, next) => {
   user.newPhone = undefined;
   auth.otp = undefined;
   auth.otpExpires = undefined;
-  //TODO test if works without the validateBeforeSave property
   await user.save();
   await auth.save();
 
