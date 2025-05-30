@@ -242,10 +242,16 @@ userSchema.methods.passwordChangedAfter = function (issueTime) {
 };
 
 //Create password reset token
-userSchema.methods.createPasswordResetToken = function () {
+/* userSchema.methods.createPasswordResetToken = function () {
   const token = crypto.randomBytes(32).toString('hex');
   this.passwordResetToken = crypto.createHash('sha256').update(token).digest('hex');
   this.passwordResetExpires = new Date(Date.now() + process.env.PASS_RESET_EXPIRES_MIN * 60 * 1000);
+  return token;
+}; */
+userSchema.methods.createEmailToken = function (type = 'passwordReset') {
+  const token = crypto.randomBytes(32).toString('hex');
+  this[`${type}Token`] = crypto.createHash('sha256').update(token).digest('hex');
+  this[`${type}Expires`] = new Date(Date.now() + process.env.PASS_RESET_EXPIRES_MIN * 60 * 1000);
   return token;
 };
 

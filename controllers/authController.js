@@ -148,7 +148,7 @@ const forgotPassword = async (req, res, next) => {
   const user = await User.findOne({ email });
   if (!user) return next(new AppError('There is no user with this email address', 404));
 
-  const token = await user.createPasswordResetToken();
+  const token = await user.createEmailToken('passwordReset');
   const url = `${req.protocol}://${req.get('host')}/api/v1/auth/reset-password/${token}`;
   const text = `Here is your password reset token:\n${url}\n\nPlease ignore this message if you haven't asked for one.`;
 
@@ -245,6 +245,15 @@ const setPassword = async (req, res, next) => {
   await signSendToken(user._id, req, res, 'Your password has been set successfully');
 };
 
+const getVerifyEmailToken = async (req, res, next) => {
+  const { email } = req.body;
+  const user = await User.findById(req.user._id);
+  if (user.email !== email) return next(new AppError('This is not your email address. Please try again.', 404));
+
+  const token = user.createEmailToken('emailVerify');
+  const url = `${req.protocol}://${req.get('host')}/api/v1/auth/verifyEmail`;
+};
+
 module.exports = {
   editPhoneNumber,
   protectRoute,
@@ -258,4 +267,6 @@ module.exports = {
   updatePhone,
   updatePassword,
   setPassword,
+  getVerifyEmailToken,
+  verifyEmailToken,
 };
