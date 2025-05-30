@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       minlength: [8, 'Password cannot be less than 8 characters'],
+      select: false,
     },
     passwordConfirm: {
       type: String,
@@ -22,7 +23,7 @@ const userSchema = new mongoose.Schema(
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
-    otp: String,
+    otp: { type: String, select: false },
     otpExpires: Date,
     emailVerified: Boolean,
     emailVerifyToken: String,
@@ -241,11 +242,12 @@ userSchema.methods.passwordChangedAfter = function (issueTime) {
   return this.passwordChangedAt?.getTime() > issueTime * 1000;
 };
 
-//Create password reset token
-userSchema.methods.createPasswordResetToken = function () {
+userSchema.methods.createEmailToken = function (type = 'passwordReset') {
   const token = crypto.randomBytes(32).toString('hex');
-  this.passwordResetToken = crypto.createHash('sha256').update(token).digest('hex');
-  this.passwordResetExpires = new Date(Date.now() + process.env.PASS_RESET_EXPIRES_MIN * 60 * 1000);
+  this[`${type}Token`] = crypto.createHash('sha256').update(token).digest('hex');
+  this[`${type}Expires`] = new Date(
+    Date.now() + process.env[`${type === 'passwordReset' ? 'PASS_RESET' : 'EMAIL_VERIFY'}_EXPIRES_MIN`] * 60 * 1000,
+  );
   return token;
 };
 

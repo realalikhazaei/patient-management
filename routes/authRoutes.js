@@ -11,6 +11,8 @@ const {
   updatePhone,
   updatePassword,
   setPassword,
+  getVerifyEmailToken,
+  verifyEmailToken,
 } = require('../controllers/authController');
 
 const router = express.Router();
@@ -31,5 +33,8 @@ router.use(protectRoute);
 router.patch('/update-phone', updatePhone);
 router.patch('/update-password', updatePassword);
 router.patch('/set-password', setPassword);
+
+router.get('/verify-email', getVerifyEmailToken);
+router.post('/verify-email/:token', verifyEmailToken);
 
 module.exports = router;

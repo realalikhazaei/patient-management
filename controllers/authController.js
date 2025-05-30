@@ -31,8 +31,8 @@ const signSendToken = async (id, req, res, message, statusCode = 200) => {
 };
 
 const editPhoneNumber = (req, res, next) => {
-  if (req.body.phone) req.body.phone = req.body.phone.replace(/^(?:\+98|98|0)/, '');
-  if (req.body.newPhone) req.body.newPhone = req.body.newPhone.replace(/^(?:\+98|98|0)/, '');
+  if (req.body?.phone) req.body.phone = req.body.phone.replace(/^(?:\+98|98|0)/, '');
+  if (req.body?.newPhone) req.body.newPhone = req.body.newPhone.replace(/^(?:\+98|98|0)/, '');
   next();
 };
 
@@ -45,7 +45,7 @@ const protectRoute = async (req, res, next) => {
 
   const payload = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-  const user = await User.findById(payload.id);
+  const user = await User.findById(payload.id).select('+password');
   if (!user) return next(new AppError('Your account has been deactivated. Please contact support.', 404));
 
   if (user.password) {
@@ -116,7 +116,7 @@ const loginEmail = async (req, res, next) => {
   if (!email) return next(new AppError('Please provide your email address', 400));
   if (!password) return next(new AppError('Please provide your password', 400));
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select('+password');
 
   const correct = await user?.verifyPassword(password);
   if (!user || !correct) return next(new AppError('There is no account with this email and password.', 404));
@@ -127,7 +127,7 @@ const loginEmail = async (req, res, next) => {
 const loginPhone = async (req, res, next) => {
   const { phone, otp } = req.body;
 
-  const user = await User.findOne({ phone });
+  const user = await User.findOne({ phone }).select('+otp');
   if (!user) return next(new AppError('There is no account with this phone number. Please sign up first.', 404));
 
   const expiredOTP = user.otpExpires < Date.now();
@@ -148,7 +148,7 @@ const forgotPassword = async (req, res, next) => {
   const user = await User.findOne({ email });
   if (!user) return next(new AppError('There is no user with this email address', 404));
 
-  const token = await user.createPasswordResetToken();
+  const token = await user.createEmailToken('passwordReset');
   const url = `${req.protocol}://${req.get('host')}/api/v1/auth/reset-password/${token}`;
   const text = `Here is your password reset token:\n${url}\n\nPlease ignore this message if you haven't asked for one.`;
 
@@ -174,6 +174,7 @@ const forgotPassword = async (req, res, next) => {
 
 const resetPassword = async (req, res, next) => {
   const { token } = req.params;
+  if (!token) return next(new AppError('There is no password reset token. Please try again.', 400));
   const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
   const user = await User.findOne({ passwordResetToken: hashedToken, passwordResetExpires: { $gte: Date.now() } });
@@ -194,7 +195,7 @@ const resetPassword = async (req, res, next) => {
 };
 
 const updatePhone = async (req, res, next) => {
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(req.user._id).select('+otp');
 
   const expiredOTP = user.otpExpires < Date.now();
   if (expiredOTP) return next(new AppError('Your one-time password has expired. Please try again.', 401));
@@ -212,7 +213,7 @@ const updatePhone = async (req, res, next) => {
 };
 
 const updatePassword = async (req, res, next) => {
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(req.user._id).select('+password');
 
   const { currentPassword, newPassword, newPasswordConfirm } = req.body;
   if (!currentPassword) return next(new AppError('Please provide your current password', 400));
@@ -230,7 +231,7 @@ const updatePassword = async (req, res, next) => {
 };
 
 const setPassword = async (req, res, next) => {
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(req.user._id).select('+password');
 
   if (user.password) return next(new AppError('You cannot use this route to change your password.', 400));
 
@@ -243,6 +244,54 @@ const setPassword = async (req, res, next) => {
   await user.save();
 
   await signSendToken(user._id, req, res, 'Your password has been set successfully');
+};
+
+const getVerifyEmailToken = async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  if (user.emailVerified) return next(new AppError('Your email has verified already.', 400));
+
+  const token = user.createEmailToken('emailVerify');
+  const url = `${req.protocol}://${req.get('host')}/api/v1/auth/verify-email/${token}`;
+  const text = `Here is your email verification link:\n${url}\n\n`;
+
+  try {
+    await new Email(user, text).sendVerifyEmail();
+    await user.save();
+  } catch (err) {
+    user.emailVerifyToken = undefined;
+    user.emailVerifyExpires = undefined;
+    await user.save();
+
+    return res.status(500).json({
+      status: 'error',
+      message: 'There has been a problem sending the email. Please try again later.',
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    message: 'A email verification link has been sent to your email.',
+  });
+};
+
+const verifyEmailToken = async (req, res, next) => {
+  const { token } = req.params;
+  if (!token) return next(new AppError('There is no email verification token. Please try again.', 400));
+  const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+  const user = await User.findById(req.user._id);
+  if (user.emailVerifyToken !== hashedToken && user.emailVerifyExpires < Date.now())
+    return next(new AppError('Your email verification link is either wrong or expired. Please try again.', 401));
+
+  user.emailVerified = true;
+  user.emailVerifyToken = undefined;
+  user.emailVerifyExpires = undefined;
+  await user.save();
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Your email address has been verified successfully.',
+  });
 };
 
 module.exports = {
@@ -258,4 +307,6 @@ module.exports = {
   updatePhone,
   updatePassword,
   setPassword,
+  getVerifyEmailToken,
+  verifyEmailToken,
 };
