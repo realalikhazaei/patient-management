@@ -7,13 +7,15 @@ const {
   deleteUser,
   updateMe,
   deleteMe,
+  updateDoctor,
 } = require('../controllers/userController');
-const { protectRoute } = require('../controllers/authController');
+const { protectRoute, restrictTo } = require('../controllers/authController');
 
 const router = express.Router();
 
 router.use(protectRoute);
 
+router.patch('/update-account/doctor-options', restrictTo('doctor'), updateDoctor);
 router.patch('/update-account', updateMe);
 router.patch('/delete-account', deleteMe);
 

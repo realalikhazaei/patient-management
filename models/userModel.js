@@ -162,7 +162,7 @@ const userSchema = new mongoose.Schema(
         type: [Number],
         validate: {
           validator: function (val) {
-            return val <= 6 && val >= 0 && val % 1 === 0;
+            return val.every(el => el <= 6 && el >= 0 && el % 1 === 0);
           },
         },
         message: 'Please provide an integer between 0 to 6',
@@ -188,11 +188,11 @@ userSchema.virtual('auth', {
   foreignField: 'userId',
 });
 
-//Remove doctorOptions for non-doctor roles
-userSchema.pre('save', function (next) {
+//Remove doctorOptions for non-doctor roles //FIXME
+/* userSchema.pre('save', function (next) {
   if (this.role !== 'doctor') this.doctorOptions = null;
   next();
-});
+}); */
 
 //Encrypt password
 userSchema.pre('save', async function (next) {
