@@ -309,6 +309,4 @@ module.exports = {
   setPassword,
   getVerifyEmailToken,
   verifyEmailToken,
-  getVerifyEmailToken,
-  verifyEmailToken,
 };
