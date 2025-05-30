@@ -189,12 +189,6 @@ userSchema.virtual('auth', {
   foreignField: 'userId',
 });
 
-//Remove doctorOptions for non-doctor roles
-userSchema.pre('save', function (next) {
-  if (this.role !== 'doctor') this.doctorOptions = null;
-  next();
-});
-
 //Encrypt password
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
