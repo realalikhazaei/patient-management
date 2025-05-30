@@ -13,6 +13,8 @@ const {
   setPassword,
   getVerifyEmailToken,
   verifyEmailToken,
+  getVerifyEmailToken,
+  verifyEmailToken,
 } = require('../controllers/authController');
 
 const router = express.Router();

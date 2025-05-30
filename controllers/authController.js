@@ -149,6 +149,7 @@ const forgotPassword = async (req, res, next) => {
   if (!user) return next(new AppError('There is no user with this email address', 404));
 
   const token = await user.createEmailToken('passwordReset');
+  const token = await user.createEmailToken('passwordReset');
   const url = `${req.protocol}://${req.get('host')}/api/v1/auth/reset-password/${token}`;
   const text = `Here is your password reset token:\n${url}\n\nPlease ignore this message if you haven't asked for one.`;
 
@@ -307,6 +308,8 @@ module.exports = {
   updatePhone,
   updatePassword,
   setPassword,
+  getVerifyEmailToken,
+  verifyEmailToken,
   getVerifyEmailToken,
   verifyEmailToken,
 };
