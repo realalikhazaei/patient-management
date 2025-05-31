@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const Email = require('../utils/email');
+const requiredField = require('../utils/requiredField');
 
 /**
  *
@@ -30,7 +31,7 @@ const signSendToken = async (id, req, res, message, statusCode = 200) => {
   });
 };
 
-const editPhoneNumber = (req, res, next) => {
+const trimPhoneNumber = (req, res, next) => {
   if (req.body?.phone) req.body.phone = req.body.phone.replace(/^(?:\+98|98|0)/, '');
   if (req.body?.newPhone) req.body.newPhone = req.body.newPhone.replace(/^(?:\+98|98|0)/, '');
   next();
@@ -102,9 +103,8 @@ const getOTP = async (req, res, next) => {
 
 const signupEmail = async (req, res, next) => {
   const { email, password, passwordConfirm } = req.body;
-  if (!email) return next(new AppError('Please provide your email address', 400));
-  if (!password) return next(new AppError('Please provide a password', 400));
-  if (!passwordConfirm) return next(new AppError('Please confirm your password', 400));
+  const errors = requiredField({ email, password, passwordConfirm });
+  if (Object.keys(errors).length !== 0) return next(new AppError(Object.values(errors)[0], 400));
 
   const user = await User.create({ email, password, passwordConfirm });
 
@@ -113,8 +113,8 @@ const signupEmail = async (req, res, next) => {
 
 const loginEmail = async (req, res, next) => {
   const { email, password } = req.body;
-  if (!email) return next(new AppError('Please provide your email address', 400));
-  if (!password) return next(new AppError('Please provide your password', 400));
+  const errors = requiredField({ password, email });
+  if (Object.keys(errors).length !== 0) return next(new AppError(Object.values(errors)[0], 400));
 
   const user = await User.findOne({ email }).select('+password');
 
@@ -181,8 +181,9 @@ const resetPassword = async (req, res, next) => {
   if (!user) return next(new AppError('Your password reset link is either wrong or expired. Please try again.', 401));
 
   const { password, passwordConfirm } = req.body;
-  if (!password) return next(new AppError('Please provide a password', 400));
-  if (!passwordConfirm) return next(new AppError('Please confirm your password', 400));
+  const errors = requiredField({ password, passwordConfirm });
+  if (Object.keys(errors).length !== 0) return next(new AppError(Object.values(errors)[0], 400));
+
   user.password = password;
   user.passwordConfirm = passwordConfirm;
   await user.save();
@@ -215,16 +216,16 @@ const updatePhone = async (req, res, next) => {
 const updatePassword = async (req, res, next) => {
   const user = await User.findById(req.user._id).select('+password');
 
-  const { currentPassword, newPassword, newPasswordConfirm } = req.body;
-  if (!currentPassword) return next(new AppError('Please provide your current password', 400));
-  if (!newPassword) return next(new AppError('Please provide a password', 400));
-  if (!newPasswordConfirm) return next(new AppError('Please confirm your password', 400));
+  const { currentPassword, newPassword: password, newPasswordConfirm: passwordConfirm } = req.body;
+
+  const errors = requiredField({ currentPassword, password, passwordConfirm });
+  if (Object.keys(errors).length !== 0) return next(new AppError(Object.values(errors)[0], 400));
 
   const correct = await user.verifyPassword(currentPassword);
   if (!correct) return next(new AppError('Your current password is wrong.', 401));
 
-  user.password = newPassword;
-  user.passwordConfirm = newPasswordConfirm;
+  user.password = password;
+  user.passwordConfirm = passwordConfirm;
   await user.save();
 
   await signSendToken(user._id, req, res, 'Your password has been changed successfully');
@@ -236,8 +237,8 @@ const setPassword = async (req, res, next) => {
   if (user.password) return next(new AppError('You cannot use this route to change your password.', 400));
 
   const { password, passwordConfirm } = req.body;
-  if (!password) return next(new AppError('Please provide a password', 400));
-  if (!passwordConfirm) return next(new AppError('Please confirm your password', 400));
+  const errors = requiredField({ password, passwordConfirm });
+  if (Object.keys(errors).length !== 0) return next(new AppError(Object.values(errors)[0], 400));
 
   user.password = password;
   user.passwordConfirm = passwordConfirm;
@@ -295,7 +296,7 @@ const verifyEmailToken = async (req, res, next) => {
 };
 
 module.exports = {
-  editPhoneNumber,
+  trimPhoneNumber,
   protectRoute,
   restrictTo,
   getOTP,

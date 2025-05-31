@@ -1,6 +1,6 @@
 const express = require('express');
 const {
-  editPhoneNumber,
+  trimPhoneNumber,
   protectRoute,
   getOTP,
   signupEmail,
@@ -17,7 +17,7 @@ const {
 
 const router = express.Router();
 
-router.use(editPhoneNumber);
+router.use(trimPhoneNumber);
 
 router.post('/otp', getOTP);
 
