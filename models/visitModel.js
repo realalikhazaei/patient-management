@@ -20,16 +20,15 @@ const visitSchema = new mongoose.Schema({
       validator: function (val) {
         return val > Date.now() && val < Date.now() + process.env.VISIT_RANGE * 24 * 60 * 60 * 1000;
       },
+      message: 'You can only book an appointment within the next 30 days.',
     },
   },
   prescriptions: {
     drug: {
       type: String,
-      required: [true, 'Please provide a drug name.'],
     },
     count: {
       type: Number,
-      required: [true, 'Please provide the drug count.'],
     },
     usage: {
       type: String,

@@ -131,22 +131,8 @@ const userSchema = new mongoose.Schema(
           ],
           message: 'Please provide a valid specification',
         },
-        validate: {
-          validator: function (val) {
-            return this.role === 'doctor' && !val ? false : true;
-          },
-          message: 'Please provide a specification',
-        },
       },
-      mcNumber: {
-        type: String,
-        validate: {
-          validator: function (val) {
-            return this.role === 'doctor' && !val ? false : true;
-          },
-          message: 'Please provide your medical council ID',
-        },
-      },
+      mcNumber: String,
       ratingsAverage: {
         type: Number,
         default: 1,
@@ -163,7 +149,7 @@ const userSchema = new mongoose.Schema(
         type: [Number],
         validate: {
           validator: function (val) {
-            return val.every(el => el <= 6 && el >= 0 && el % 1 === 0);
+            return val?.every(el => el <= 6 && el >= 0 && el % 1 === 0);
           },
         },
         message: 'Please provide an integer between 0 to 6',
@@ -249,6 +235,18 @@ userSchema.methods.createEmailToken = function (type = 'passwordReset') {
     Date.now() + process.env[`${type === 'passwordReset' ? 'PASS_RESET' : 'EMAIL_VERIFY'}_EXPIRES_MIN`] * 60 * 1000,
   );
   return token;
+};
+
+userSchema.methods.checkValidVisitTime = function (date) {
+  const { visitWeekdays: week, visitRange: range, visitExceptions: except } = this.doctorOptions;
+  const dateMin = date.getHours() * 60 + date.getMinutes();
+  const startMin = Number(range[0].split(':')[0]) * 60 + Number(range[0].split(':')[1]);
+  const endMin = Number(range[1].split(':')[0]) * 60 + Number(range[1].split(':')[1]);
+  const weekday = date.getDay() === 6 ? 0 : date.getDay() + 1;
+  const matchWeekday = week?.includes(weekday);
+  const matchTimeRange = dateMin > startMin && dateMin < endMin;
+  const matchExceptions = except?.every(el => date.toLocaleDateString() !== el.toLocaleDateString());
+  return matchWeekday && matchTimeRange && matchExceptions;
 };
 
 const User = mongoose.model('User', userSchema);

@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 app.use('/api/v1/drugs', drugRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/visit', visitRouter);
+app.use('/api/v1/visits', visitRouter);
 
 //Error handling
 app.use(/.*/, (req, res, next) => {

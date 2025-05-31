@@ -4,6 +4,7 @@ const {
   protectRoute,
   getOTP,
   signupEmail,
+  signupDoctor,
   loginEmail,
   loginPhone,
   forgotPassword,
@@ -11,7 +12,6 @@ const {
   updatePhone,
   updatePassword,
   setPassword,
-  signupDoctor,
   getVerifyEmailToken,
   verifyEmailToken,
 } = require('../controllers/authController');

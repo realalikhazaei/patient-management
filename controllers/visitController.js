@@ -1,4 +1,5 @@
 const Visit = require('../models/visitModel');
+const User = require('../models/userModel');
 const factory = require('./handlerFactory');
 const AppError = require('../utils/appError');
 
@@ -18,14 +19,19 @@ const addUserID = (req, res, next) => {
 };
 
 const bookVisit = async (req, res, next) => {
-  const { doctor, dateTime } = req.body;
+  const { doctor, dateTime: visitTime } = req.body;
+  const date = new Date(visitTime);
 
-  const date = new Date(`${dateTime.getFullYear()}-${dateTime.getMonth()}-${dateTime.getDate()}`);
+  const sameDay = new Date(`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
+  const nextDay = new Date(sameDay.getTime() + 24 * 60 * 60 * 1000);
 
-  const maxVisit = await Visit.findOne({ patient: req.user._id, dateTime: { $gt: date } });
+  const maxVisit = await Visit.findOne({ doctor, patient: req.user._id, dateTime: { $gt: sameDay, $lt: nextDay } });
   if (maxVisit) return next(new AppError('You cannot book more than one appointments per day.', 403));
 
-  const visit = await Visit.create({ doctor, patient: req.user._id, dateTime });
+  const doctorAcc = await User.findById(doctor);
+  if (!doctorAcc?.checkValidVisitTime(date)) return next(new AppError('The visit time is not available.', 400));
+
+  const visit = await Visit.create({ doctor, patient: req.user._id, dateTime: date });
 
   res.status(201).json({
     status: 'success',
@@ -35,8 +41,24 @@ const bookVisit = async (req, res, next) => {
 };
 
 const updateMyVisit = (req, res, next) => {
-  (req.params.closed = false), ['patient', 'closed', 'prescriptions'].forEach(el => delete req.body[el]);
+  req.params.closed = false;
+  ['patient', 'closed', 'prescriptions'].forEach(el => delete req.body[el]);
   next();
 };
 
-module.exports = { getAllVisits, getVisit, createVisit, updateVisit, deleteVisit, addUserID, bookVisit, updateMyVisit };
+const deleteMyVisit = (req, res, next) => {
+  req.params.closed = false;
+  next();
+};
+
+module.exports = {
+  getAllVisits,
+  getVisit,
+  createVisit,
+  updateVisit,
+  deleteVisit,
+  addUserID,
+  bookVisit,
+  updateMyVisit,
+  deleteMyVisit,
+};
