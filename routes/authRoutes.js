@@ -11,6 +11,7 @@ const {
   updatePhone,
   updatePassword,
   setPassword,
+  signupDoctor,
 } = require('../controllers/authController');
 
 const router = express.Router();
@@ -19,6 +20,7 @@ router.use(editPhoneNumber);
 
 router.post('/otp', getOTP);
 
+router.post('/sign-up/email/doctor', signupDoctor);
 router.post('/sign-up/email', signupEmail);
 router.post('/login/email', loginEmail);
 router.post('/login/phone', loginPhone);

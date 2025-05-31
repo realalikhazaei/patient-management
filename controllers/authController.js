@@ -245,6 +245,17 @@ const setPassword = async (req, res, next) => {
   await signSendToken(user._id, req, res, 'Your password has been set successfully');
 };
 
+const signupDoctor = async (req, res, next) => {
+  const { name, email, idCard, password, passwordConfirm, specification, mcNumber } = req.body;
+  if (!name) return next(new AppError('Please provide your name', 400));
+  if (!email) return next(new AppError('Please provide your email address', 400));
+  if (!idCard) return next(new AppError('Please provide your ID card number', 400));
+  if (!password) return next(new AppError('Please provide a password', 400));
+  if (!passwordConfirm) return next(new AppError('Please confirm your password', 400));
+  if (!specification) return next(new AppError('Please provide your specification', 400));
+  if (!mcNumber) return next(new AppError('Please provide your MC number', 400));
+};
+
 module.exports = {
   editPhoneNumber,
   protectRoute,
