@@ -1,6 +1,6 @@
 const express = require('express');
 const {
-  editPhoneNumber,
+  trimPhoneNumber,
   protectRoute,
   getOTP,
   signupEmail,
@@ -12,11 +12,13 @@ const {
   updatePassword,
   setPassword,
   signupDoctor,
+  getVerifyEmailToken,
+  verifyEmailToken,
 } = require('../controllers/authController');
 
 const router = express.Router();
 
-router.use(editPhoneNumber);
+router.use(trimPhoneNumber);
 
 router.post('/otp', getOTP);
 
@@ -33,5 +35,8 @@ router.use(protectRoute);
 router.patch('/update-phone', updatePhone);
 router.patch('/update-password', updatePassword);
 router.patch('/set-password', setPassword);
+
+router.get('/verify-email', getVerifyEmailToken);
+router.post('/verify-email/:token', verifyEmailToken);
 
 module.exports = router;

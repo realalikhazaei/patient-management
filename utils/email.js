@@ -35,6 +35,10 @@ const Email = class {
   async sendResetPassword() {
     await this.send('Your password reset link (expires in 10 mins)', this.text);
   }
+
+  async sendVerifyEmail() {
+    await this.send('Your email verification link (expires in 20 mins)', this.text);
+  }
 };
 
 module.exports = Email;

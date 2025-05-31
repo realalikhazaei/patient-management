@@ -17,7 +17,15 @@ app.use(express.json({ limit: '10kb' }));
 
 //Filter-out unwanted data
 app.use((req, res, next) => {
-  const filterOut = ['passwordChangedAt', 'passwordResetToken', 'passwordResetExpires', 'otpExpires', 'active'];
+  const filterOut = [
+    'passwordChangedAt',
+    'passwordResetToken',
+    'passwordResetExpires',
+    'otpExpires',
+    'active',
+    'ratingsAverage',
+    'ratingsQuantity',
+  ];
   filterOut.forEach(el => delete req.body?.[el]);
   next();
 });
