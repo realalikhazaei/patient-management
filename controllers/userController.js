@@ -14,6 +14,7 @@ const deleteUser = factory.deleteOne(User);
 const updateMe = async (req, res, next) => {
   const { name, photo, birthday, idCard, email } = req.body;
 
+  //Update the user with provided fields (set email to unverified if email changed)
   const user = await User.findByIdAndUpdate(
     req.user._id,
     { name, photo, birthday, idCard, email, emailVerified: email ? false : true },
@@ -27,8 +28,10 @@ const updateMe = async (req, res, next) => {
 };
 
 const deleteMe = async (req, res, next) => {
+  //Find the user with ID and set active to false
   const user = await User.findByIdAndUpdate(req.user._id, { active: false });
 
+  //Remove JWT from cookies
   res.cookie('jwt', 'deleted', { expires: new Date(Date.now() + 10000) });
 
   res.status(200).json({
@@ -38,10 +41,13 @@ const deleteMe = async (req, res, next) => {
 };
 
 const updateDoctor = async (req, res, next) => {
+  //Create a special nested data object
   const data = {};
   for (const [key, value] of Object.entries(req.body)) {
     data[`doctorOptions.${[key]}`] = value;
   }
+
+  //Find doctor with ID and update with $set operator
   const doctor = await User.findByIdAndUpdate(req.user._id, { $set: data }, { new: true, runValidators: true });
 
   res.status(200).json({
