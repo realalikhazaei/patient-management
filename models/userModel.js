@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
   {
     password: {
       type: String,
-      minlength: [8, 'Password cannot be less than 8 characters'],
+      minlength: [8, 'Password cannot be less than 8 characters.'],
       select: false,
     },
     passwordConfirm: {
@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
         validator: function (val) {
           return val === this.password;
         },
-        message: 'Your passwords do not match',
+        message: 'Your passwords do not match.',
       },
     },
     passwordChangedAt: Date,
@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema(
         validator: function (val) {
           return val.split(' ').length >= 2;
         },
-        message: 'Please provide your full name',
+        message: 'Please provide your full name.',
       },
     },
     photo: {
@@ -55,35 +55,37 @@ const userSchema = new mongoose.Schema(
     },
     phone: {
       type: String,
-      minlength: [10, 'A phone number cannot be less than 10 characters'],
+      minlength: [10, 'A phone number cannot be less than 10 characters.'],
+      maxlength: [10, 'A phone number cannot be more than 10 characters.'],
       unique: [true, 'This phone number already exists.'],
       sparse: true,
     },
     newPhone: {
       type: String,
-      minlength: [10, 'A phone number cannot be less than 10 characters'],
+      minlength: [10, 'A phone number cannot be less than 10 characters.'],
+      maxlength: [10, 'A phone number cannot be more than 10 characters.'],
       unique: [true, 'This phone number already exists.'],
       sparse: true,
     },
     email: {
       type: String,
-      maxlength: [100, 'An email address cannot be more than 100 characters'],
+      maxlength: [100, 'An email address cannot be more than 100 characters.'],
       unique: [true, 'This email address already exists.'],
       sparse: true,
       validate: {
         validator: isEmail,
-        message: 'Please provide a valid email address',
+        message: 'Please provide a valid email address.',
       },
     },
     idCard: {
       type: String,
-      unique: [true, 'This ID card already exists'],
+      unique: [true, 'This ID card already exists.'],
       sparse: true,
       validate: {
         validator: function (val) {
           return val.length === 10;
         },
-        message: 'The ID card number is not correct',
+        message: 'The ID card number is not correct.',
       },
     },
     birthday: {
@@ -132,11 +134,15 @@ const userSchema = new mongoose.Schema(
           message: 'Please provide a valid specification',
         },
       },
-      mcNumber: String,
+      mcNumber: {
+        type: String,
+        unique: [true, 'This medical council number already used.'],
+        sparse: true,
+      },
       ratingsAverage: {
         type: Number,
         default: 1,
-        max: [5, 'Maximum amount for ratings average is 5'],
+        max: [5, 'Maximum amount for ratings average is 5.'],
         set: function (val) {
           return Math.round(val * 10) / 10;
         },
@@ -152,7 +158,7 @@ const userSchema = new mongoose.Schema(
             return val?.every(el => el <= 6 && el >= 0 && el % 1 === 0);
           },
         },
-        message: 'Please provide an integer between 0 to 6',
+        message: 'Please provide an integer between 0 to 6.',
       },
       visitRange: {
         type: [String],
@@ -175,11 +181,11 @@ userSchema.virtual('auth', {
   foreignField: 'userId',
 });
 
-//Remove doctorOptions for non-doctor roles //FIXME
-/* userSchema.pre('save', function (next) {
+//Remove doctorOptions for non-doctor roles
+userSchema.pre('save', function (next) {
   if (this.role !== 'doctor') this.doctorOptions = null;
   next();
-}); */
+});
 
 //Encrypt password
 userSchema.pre('save', async function (next) {
@@ -244,7 +250,7 @@ userSchema.methods.checkValidVisitTime = function (date) {
   const endMin = Number(range[1].split(':')[0]) * 60 + Number(range[1].split(':')[1]);
   const weekday = date.getDay() === 6 ? 0 : date.getDay() + 1;
   const matchWeekday = week?.includes(weekday);
-  const matchTimeRange = dateMin > startMin && dateMin < endMin;
+  const matchTimeRange = dateMin >= startMin && dateMin <= endMin && dateMin % 15 === 0;
   const matchExceptions = except?.every(el => date.toLocaleDateString() !== el.toLocaleDateString());
   return matchWeekday && matchTimeRange && matchExceptions;
 };

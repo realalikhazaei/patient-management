@@ -6,7 +6,8 @@ const {
   updateVisit,
   deleteVisit,
   addUserID,
-  bookVisit,
+  checkVisitTime,
+  bookMyVisit,
   updateMyVisit,
   deleteMyVisit,
 } = require('../controllers/visitController');
@@ -20,9 +21,9 @@ router
   .route('/:_id/patient')
   .all(addUserID)
   .get(getVisit)
-  .patch(updateMyVisit, updateVisit)
+  .patch(checkVisitTime, updateMyVisit, updateVisit)
   .delete(deleteMyVisit, deleteVisit);
-router.route('/patient').all(addUserID).get(getAllVisits).post(bookVisit);
+router.route('/patient').all(addUserID).get(getAllVisits).post(checkVisitTime, bookMyVisit);
 
 router.route('/:_id').get(getVisit).patch(updateVisit).delete(deleteVisit);
 router.route('/').get(getAllVisits).post(createVisit);

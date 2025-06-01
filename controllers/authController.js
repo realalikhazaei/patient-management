@@ -300,7 +300,8 @@ const verifyEmailToken = async (req, res, next) => {
   const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
   const user = await User.findById(req.user._id);
-  if (user.emailVerifyToken !== hashedToken && user.emailVerifyExpires < Date.now())
+  if (user.emailVerified) return next(new AppError('Your email is already verified.', 400));
+  if (user.emailVerifyToken !== hashedToken || user.emailVerifyExpires < Date.now())
     return next(new AppError('Your email verification link is either wrong or expired. Please try again.', 401));
 
   user.emailVerified = true;

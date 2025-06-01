@@ -34,11 +34,7 @@ const validationErrDB = err => {
 
 const uniqueErrDB = err => new AppError(err.message, 400);
 
-const compoundIndexErrDB = err => {
-  const message = [];
-  for (const [key, value] of Object.entries(err.keyValue)) if (value) message.push(`This ${key} already exists`);
-  return new AppError(message.join('. '), 400);
-};
+const compoundIndexErrDB = () => new AppError('This visit time is already taken.', 400);
 
 const globalErrorHandler = (err, req, res, next) => {
   err.status ||= 'error';
@@ -51,7 +47,7 @@ const globalErrorHandler = (err, req, res, next) => {
     if (err.name === 'CastError') error = invalidIdErrDB(err);
     if (err.name === 'ValidationError') error = validationErrDB(err);
     if (err.stack.startsWith('MongooseError')) error = uniqueErrDB(err);
-    if (err.code === 11000) error = compoundIndexErrDB(err);
+    if (err.code === 11000) error = compoundIndexErrDB();
 
     prodErr(error, res);
   }

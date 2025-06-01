@@ -12,11 +12,11 @@ const updateUser = factory.updateOne(User);
 const deleteUser = factory.deleteOne(User);
 
 const updateMe = async (req, res, next) => {
-  const { name, photo, birthday, email } = req.body;
+  const { name, photo, birthday, idCard, email } = req.body;
 
   const user = await User.findByIdAndUpdate(
     req.user._id,
-    { name, photo, birthday, email, emailVerified: email ? false : true },
+    { name, photo, birthday, idCard, email, emailVerified: email ? false : true },
     { new: true, runValidators: true },
   );
 
