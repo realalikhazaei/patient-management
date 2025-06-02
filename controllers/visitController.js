@@ -60,19 +60,28 @@ const addPrescription = async (req, res, next) => {
   const errors = requiredField({ drug, count });
   if (Object.keys(errors).length !== 0) return next(new AppError(Object.values(errors)[0], 400));
 
-  const visit = await Visit.findByIdAndUpdate(
-    req.params._id,
-    { drug, count, usage },
-    { new: true, runValidators: true },
-  );
+  const data = {};
+  for (const [key, value] of Object.entries(req.body)) {
+    data[`prescriptions.${[key]}`] = value;
+  }
+
+  const visit = await Visit.findByIdAndUpdate(req.params._id, { $set: data }, { new: true, runValidators: true });
 
   res.status(200).json({
     status: 'success',
     message: 'Prescription has been added successfully.',
+    data: visit,
   });
 };
 
-const deletePrescription = async (req, res, next) => {};
+const deletePrescription = async (req, res, next) => {
+  const visit = await Visit.findByIdAndUpdate(req.params._id, { prescriptions: undefined });
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Prescription has been deleted successfully.',
+  });
+};
 
 module.exports = {
   getAllVisits,
