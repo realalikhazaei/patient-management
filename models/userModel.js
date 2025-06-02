@@ -166,6 +166,10 @@ const userSchema = new mongoose.Schema(
       },
       visitExceptions: [Date],
     },
+    doctor: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -175,15 +179,21 @@ const userSchema = new mongoose.Schema(
 );
 
 //Virtual reference
-userSchema.virtual('auth', {
-  ref: 'Auth',
+userSchema.virtual('visits', {
+  ref: 'Visit',
   localField: '_id',
-  foreignField: 'userId',
+  foreignField: 'doctor',
 });
 
 //Remove doctorOptions for non-doctor roles
 userSchema.pre('save', function (next) {
   if (this.role !== 'doctor') this.doctorOptions = null;
+  next();
+});
+
+//Remove doctor ID field for non-secretary roles
+userSchema.pre('save', function (next) {
+  if (this.role !== 'secretary') this.doctor = undefined;
   next();
 });
 

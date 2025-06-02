@@ -8,12 +8,18 @@ const {
   updateMe,
   deleteMe,
   updateDoctor,
+  getDoctorAndVisits,
+  addSecretary,
 } = require('../controllers/userController');
 const { protectRoute, restrictTo } = require('../controllers/authController');
 
 const router = express.Router();
 
+router.get('/doctor/:_id', getDoctorAndVisits);
+
 router.use(protectRoute);
+
+router.patch('/add-secretary', restrictTo('admin'), addSecretary);
 
 router.patch('/update-account/doctor-options', restrictTo('doctor'), updateDoctor);
 router.patch('/update-account', updateMe);

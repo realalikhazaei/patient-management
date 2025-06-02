@@ -19,6 +19,7 @@ const requiredField = fieldsObj => {
   }, {});
 
   return errors;
+  // return Object.keys(errors)?.length !== 0 ? errors : undefined;
 };
 
 module.exports = requiredField;

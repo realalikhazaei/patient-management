@@ -23,18 +23,16 @@ const visitSchema = new mongoose.Schema({
       message: 'You can only book an appointment within the next 30 days.',
     },
   },
-  prescriptions: {
-    drug: {
-      type: String,
+  prescriptions: [
+    {
+      drug: String,
+      count: Number,
+      usage: {
+        type: String,
+        maxlength: [200, 'Drug usage cannot be more than 200 characters.'],
+      },
     },
-    count: {
-      type: Number,
-    },
-    usage: {
-      type: String,
-      maxlength: [200, 'Drug usage cannot be more than 200 characters.'],
-    },
-  },
+  ],
 });
 
 //Compound unique index for doctor and visit time

@@ -5,25 +5,41 @@ const {
   createVisit,
   updateVisit,
   deleteVisit,
-  addUserID,
+  addPatientID,
   checkVisitTime,
   bookMyVisit,
   updateMyVisit,
   deleteMyVisit,
+  getPrescription,
+  addPrescription,
+  deletePrescription,
+  addDoctorID,
+  getDoctorVisit,
+  getTodayVisits,
+  closeAVisit,
 } = require('../controllers/visitController');
-const { protectRoute } = require('../controllers/authController');
+const { protectRoute, restrictTo } = require('../controllers/authController');
 
 const router = express.Router();
 
+router.get('/:_id/prescription', getPrescription);
+
 router.use(protectRoute);
+
+router.route('/:_id/prescription').all(restrictTo('doctor')).patch(addPrescription).delete(deletePrescription);
+
+router.get('/:_id/doctor', restrictTo('doctor'), getDoctorVisit);
+router.get('/doctor/today', restrictTo('doctor', 'secretary'), addDoctorID, getTodayVisits);
+router.get('/doctor', restrictTo('doctor', 'secretary'), addDoctorID, getAllVisits);
+router.patch('/:_id/doctor/close-visit', restrictTo('doctor', 'secretary'), addDoctorID, closeAVisit);
 
 router
   .route('/:_id/patient')
-  .all(addUserID)
+  .all(addPatientID)
   .get(getVisit)
   .patch(checkVisitTime, updateMyVisit, updateVisit)
   .delete(deleteMyVisit, deleteVisit);
-router.route('/patient').all(addUserID).get(getAllVisits).post(checkVisitTime, bookMyVisit);
+router.route('/patient').all(addPatientID).get(getAllVisits).post(checkVisitTime, bookMyVisit);
 
 router.route('/:_id').get(getVisit).patch(updateVisit).delete(deleteVisit);
 router.route('/').get(getAllVisits).post(createVisit);

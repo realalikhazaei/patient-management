@@ -133,7 +133,7 @@ const signupDoctor = async (req, res, next) => {
 const loginEmail = async (req, res, next) => {
   const { email, password } = req.body;
   const errors = requiredField({ password, email });
-  if (Object.keys(errors).length !== 0) return next(new AppError(Object.values(errors)[0], 400));
+  if (Object.keys(errors)?.length !== 0) return next(new AppError(Object.values(errors)[0], 400));
 
   const user = await User.findOne({ email }).select('+password');
 
@@ -203,10 +203,10 @@ const resetPassword = async (req, res, next) => {
   const errors = requiredField({ password, passwordConfirm });
   if (Object.keys(errors).length !== 0) return next(new AppError(Object.values(errors)[0], 400));
 
+  if (password !== passwordConfirm) return next(new AppError('Your passwords do not match.', 400));
+
   user.password = password;
   user.passwordConfirm = passwordConfirm;
-  await user.save();
-
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
   await user.save();

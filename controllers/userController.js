@@ -1,5 +1,6 @@
 const factory = require('./handlerFactory');
 const User = require('../models/userModel');
+const AppError = require('../utils/appError');
 
 const getAllUsers = factory.getAll(User);
 
@@ -38,11 +39,11 @@ const deleteMe = async (req, res, next) => {
 };
 
 const updateDoctor = async (req, res, next) => {
-  const data = {};
+  const values = {};
   for (const [key, value] of Object.entries(req.body)) {
-    data[`doctorOptions.${[key]}`] = value;
+    values[`doctorOptions.${[key]}`] = value;
   }
-  const doctor = await User.findByIdAndUpdate(req.user._id, { $set: data }, { new: true, runValidators: true });
+  const doctor = await User.findByIdAndUpdate(req.user._id, { $set: values }, { new: true, runValidators: true });
 
   res.status(200).json({
     status: 'success',
@@ -51,4 +52,45 @@ const updateDoctor = async (req, res, next) => {
   });
 };
 
-module.exports = { getAllUsers, getUser, createUser, updateUser, deleteUser, updateMe, deleteMe, updateDoctor };
+const getDoctorAndVisits = async (req, res, next) => {
+  const doctor = await User.findOne({ _id: req.params._id, role: 'doctor' })
+    .select('-idCard -email -createdAt -updatedAt -active')
+    .populate({
+      path: 'visits',
+      select: 'dateTime closed',
+    });
+
+  res.status(200).json({
+    status: 'success',
+    results: doctor.visits.length,
+    data: doctor,
+  });
+};
+
+const addSecretary = async (req, res, next) => {
+  const { user: _id, doctor } = req.body;
+
+  if (!_id) return next(new AppError('Please provide the user ID.', 400));
+  if (!doctor) return next(new AppError('Please provide the doctor ID.', 400));
+
+  const user = await User.findByIdAndUpdate(_id, { doctor, role: 'secretary' }, { new: true, runValidators: true });
+
+  res.status(200).json({
+    status: 'success',
+    message: 'The user has been marked as a secretary successfully.',
+    data: user,
+  });
+};
+
+module.exports = {
+  getAllUsers,
+  getUser,
+  createUser,
+  updateUser,
+  deleteUser,
+  updateMe,
+  deleteMe,
+  updateDoctor,
+  getDoctorAndVisits,
+  addSecretary,
+};
