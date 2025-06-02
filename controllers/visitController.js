@@ -2,6 +2,7 @@ const Visit = require('../models/visitModel');
 const User = require('../models/userModel');
 const factory = require('./handlerFactory');
 const AppError = require('../utils/appError');
+const requiredField = require('../utils/requiredField');
 
 const getAllVisits = factory.getAll(Visit);
 
@@ -19,9 +20,11 @@ const addUserID = (req, res, next) => {
 };
 
 const bookVisit = async (req, res, next) => {
+  const { name, birthday, idCard } = req.user;
+  if (!name && !birthday && !idCard) return next(new AppError('Please complete your personal information first.', 400));
+
   const { doctor, dateTime: visitTime } = req.body;
   const date = new Date(visitTime);
-
   const sameDay = new Date(`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
   const nextDay = new Date(sameDay.getTime() + 24 * 60 * 60 * 1000);
 
@@ -51,6 +54,26 @@ const deleteMyVisit = (req, res, next) => {
   next();
 };
 
+const addPrescription = async (req, res, next) => {
+  const { drug, count, usage } = req.body;
+
+  const errors = requiredField({ drug, count });
+  if (Object.keys(errors).length !== 0) return next(new AppError(Object.values(errors)[0], 400));
+
+  const visit = await Visit.findByIdAndUpdate(
+    req.params._id,
+    { drug, count, usage },
+    { new: true, runValidators: true },
+  );
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Prescription has been added successfully.',
+  });
+};
+
+const deletePrescription = async (req, res, next) => {};
+
 module.exports = {
   getAllVisits,
   getVisit,
@@ -61,4 +84,6 @@ module.exports = {
   bookVisit,
   updateMyVisit,
   deleteMyVisit,
+  addPrescription,
+  deletePrescription,
 };

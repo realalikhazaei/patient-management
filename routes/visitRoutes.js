@@ -9,12 +9,16 @@ const {
   bookVisit,
   updateMyVisit,
   deleteMyVisit,
+  addPrescription,
+  deletePrescription,
 } = require('../controllers/visitController');
-const { protectRoute } = require('../controllers/authController');
+const { protectRoute, restrictTo } = require('../controllers/authController');
 
 const router = express.Router();
 
 router.use(protectRoute);
+
+router.route('/:id/prescription').all(restrictTo('doctor')).patch(addPrescription).delete(deletePrescription);
 
 router
   .route('/:_id/patient')
