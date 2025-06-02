@@ -34,7 +34,13 @@ const validationErrDB = err => {
 
 const uniqueErrDB = err => new AppError(err.message, 400);
 
-const compoundIndexErrDB = () => new AppError('This visit time is already taken.', 400);
+const compoundIndexErrDB = err => {
+  const errorKind = err.message?.split(': ')[2];
+  let message;
+  if (errorKind.startsWith('doctor_1_patient_1')) message = 'You have already written a comment for this doctor.';
+  if (errorKind.startsWith('doctor_1_dateTime_1')) message = 'This visit time is already taken.';
+  return new AppError(message, 400);
+};
 
 const globalErrorHandler = (err, req, res, next) => {
   err.status ||= 'error';
@@ -47,7 +53,7 @@ const globalErrorHandler = (err, req, res, next) => {
     if (err.name === 'CastError') error = invalidIdErrDB(err);
     if (err.name === 'ValidationError') error = validationErrDB(err);
     if (err.stack.startsWith('MongooseError')) error = uniqueErrDB(err);
-    if (err.code === 11000) error = compoundIndexErrDB();
+    if (err.code === 11000) error = compoundIndexErrDB(err);
 
     prodErr(error, res);
   }

@@ -136,6 +136,7 @@ const loginEmail = async (req, res, next) => {
   if (Object.keys(errors)?.length !== 0) return next(new AppError(Object.values(errors)[0], 400));
 
   const user = await User.findOne({ email }).select('+password');
+  if (!user.password) return next(new AppError('You have not specified a password for your account.', 400));
 
   const correct = await user?.verifyPassword(password);
   if (!user || !correct) return next(new AppError('There is no account with this email and password.', 404));
