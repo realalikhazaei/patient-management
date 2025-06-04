@@ -284,7 +284,6 @@ const updatePassword = async (req, res, next) => {
 
   //Required fields check
   const { currentPassword, newPassword: password, newPasswordConfirm: passwordConfirm } = req.body;
-
   const errors = requiredField({ currentPassword, password, passwordConfirm });
   if (Object.keys(errors).length !== 0) return next(new AppError(Object.values(errors)[0], 400));
 
