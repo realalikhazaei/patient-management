@@ -35,11 +35,13 @@ router.patch('/:_id/doctor/close-visit', restrictTo('doctor', 'secretary'), addD
 
 router
   .route('/:_id/patient')
-  .all(addPatientID)
+  .all(restrictTo('patient'), addPatientID)
   .get(getVisit)
   .patch(checkVisitTime, updateMyVisit, updateVisit)
   .delete(deleteMyVisit, deleteVisit);
-router.route('/patient').all(addPatientID).get(getAllVisits).post(checkVisitTime, bookMyVisit);
+router.route('/patient').all(restrictTo('patient'), addPatientID).get(getAllVisits).post(checkVisitTime, bookMyVisit);
+
+router.use(restrictTo('admin'));
 
 router.route('/:_id').get(getVisit).patch(updateVisit).delete(deleteVisit);
 router.route('/').get(getAllVisits).post(createVisit);

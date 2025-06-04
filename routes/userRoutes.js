@@ -20,10 +20,11 @@ router.get('/doctor/:_id', getDoctorAndVisits);
 router.use(protectRoute);
 
 router.patch('/add-secretary', restrictTo('admin'), addSecretary);
-
 router.patch('/update-account/doctor-options', restrictTo('doctor'), updateDoctor);
 router.patch('/update-account', updateMe);
 router.patch('/delete-account', deleteMe);
+
+router.use(restrictTo('admin'));
 
 router.route('/:_id').get(getUser).patch(updateUser).delete(deleteUser);
 router.route('/').get(getAllUsers).post(createUser);
