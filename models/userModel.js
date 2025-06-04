@@ -244,6 +244,7 @@ userSchema.methods.passwordChangedAfter = function (issueTime) {
   return this.passwordChangedAt?.getTime() > issueTime * 1000;
 };
 
+//Create a token for email
 userSchema.methods.createEmailToken = function (type = 'passwordReset') {
   const token = crypto.randomBytes(32).toString('hex');
   this[`${type}Token`] = crypto.createHash('sha256').update(token).digest('hex');
@@ -253,6 +254,7 @@ userSchema.methods.createEmailToken = function (type = 'passwordReset') {
   return token;
 };
 
+//Check doctor available time
 userSchema.methods.checkValidVisitTime = function (date) {
   const { visitWeekdays: week, visitRange: range, visitExceptions: except } = this.doctorOptions;
   const dateMin = date.getHours() * 60 + date.getMinutes();
