@@ -15,6 +15,7 @@ const updateVisit = factory.updateOne(Visit);
 const deleteVisit = factory.deleteOne(Visit);
 
 const addPatientID = (req, res, next) => {
+  //Add patient ID on url params
   req.params.patient = req.user._id;
   next();
 };
@@ -83,6 +84,7 @@ const deleteMyVisit = (req, res, next) => {
 };
 
 const getPrescription = async (req, res, next) => {
+  //Get prescription by visit ID
   const { prescriptions } = await Visit.findById(req.params._id);
 
   res.status(200).json({
@@ -95,6 +97,7 @@ const getPrescription = async (req, res, next) => {
 const addPrescription = async (req, res, next) => {
   const { prescriptions } = req.body;
 
+  //Check for required fields in prescriptions
   const errors = [];
   prescriptions.forEach(el => {
     const error = requiredField({ drug: el?.drug, count: el?.count });
@@ -103,6 +106,7 @@ const addPrescription = async (req, res, next) => {
   });
   if (Object.keys(errors[0]).length !== 0) return next(new AppError(Object.values(errors[0])[0], 400));
 
+  //Add the prescription object to a visit
   const visit = await Visit.findByIdAndUpdate(req.params._id, { prescriptions }, { new: true, runValidators: true });
 
   res.status(200).json({
@@ -113,6 +117,7 @@ const addPrescription = async (req, res, next) => {
 };
 
 const deletePrescription = async (req, res, next) => {
+  //Delete prescriptions from a visit
   const visit = await Visit.findByIdAndUpdate(req.params._id, { prescriptions: undefined });
 
   res.status(200).json({
@@ -122,11 +127,13 @@ const deletePrescription = async (req, res, next) => {
 };
 
 const addDoctorID = (req, res, next) => {
+  //Get doctor ID either from secretary or doctor itself and add on the request params
   req.params.doctor = req.user.doctor || req.user._id;
   next();
 };
 
 const getDoctorVisit = async (req, res, next) => {
+  //Get a visit by ID and doctor ID and populate patient data
   const visit = await Visit.findOne({ _id: req.params._id, doctor: req.user._id }).populate({
     path: 'patient',
     select: 'name idCard birthday photo',
@@ -139,10 +146,12 @@ const getDoctorVisit = async (req, res, next) => {
 };
 
 const getTodayVisits = async (req, res, next) => {
+  //Create date strings for start and end of the day
   const today = new Date();
   const sameDay = new Date(`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`);
   const nextDay = new Date(sameDay.getTime() + 24 * 60 * 60 * 1000);
 
+  //Get visits of today by doctor ID
   const visits = await Visit.find({ doctor: req.params.doctor, dateTime: { $gt: sameDay, $lt: nextDay } }).populate({
     path: 'patient',
     select: 'name idCard',
@@ -158,6 +167,7 @@ const getTodayVisits = async (req, res, next) => {
 const closeAVisit = async (req, res, next) => {
   const { _id, doctor } = req.params;
 
+  //Get visit and set closed to true
   const visit = await Visit.findOneAndUpdate({ _id, doctor }, { closed: true }, { new: true, runValidators: true });
 
   res.status(200).json({

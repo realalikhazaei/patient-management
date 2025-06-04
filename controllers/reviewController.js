@@ -14,19 +14,23 @@ const updateReview = factory.updateOne(Review);
 const deleteReview = factory.deleteOne(Review);
 
 const addPatientID = (req, res, next) => {
+  //Add the patient ID on url params
   req.params.patient = req.user._id;
   next();
 };
 
 const updateMyReview = (req, res, next) => {
+  //Delete possible doctor field from request body
   delete req.body.doctor;
   next();
 };
 
 const addMyReview = async (req, res, next) => {
+  //Check if there is any closed visits for a patient and doctor
   const visit = await Visit.findOne({ doctor: req.body.doctor, patient: req.user._id, closed: true });
   if (!visit) return next(new AppError('You do not have any closed visits with this doctor.', 403));
 
+  //Create a review with the patient and doctor ID
   const review = await Review.create({ ...req.body, patient: req.user._id });
 
   res.status(201).json({

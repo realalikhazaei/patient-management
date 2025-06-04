@@ -42,10 +42,13 @@ const deleteMe = async (req, res, next) => {
 };
 
 const updateDoctor = async (req, res, next) => {
+  //Convert updating fields to nested fields
   const values = {};
   for (const [key, value] of Object.entries(req.body)) {
     values[`doctorOptions.${[key]}`] = value;
   }
+
+  //Updating doctor with nested fields
   const doctor = await User.findByIdAndUpdate(req.user._id, { $set: values }, { new: true, runValidators: true });
 
   res.status(200).json({
@@ -56,6 +59,7 @@ const updateDoctor = async (req, res, next) => {
 };
 
 const getDoctorAndVisits = async (req, res, next) => {
+  //Finding the doctor and populating visits times
   const doctor = await User.findOne({ _id: req.params._id, role: 'doctor' })
     .select('-idCard -email -createdAt -updatedAt -active')
     .populate({
@@ -71,11 +75,13 @@ const getDoctorAndVisits = async (req, res, next) => {
 };
 
 const addSecretary = async (req, res, next) => {
+  //Getting user and doctor ID
   const { user: _id, doctor } = req.body;
 
   if (!_id) return next(new AppError('Please provide the user ID.', 400));
   if (!doctor) return next(new AppError('Please provide the doctor ID.', 400));
 
+  //Updating the user with new role and doctor ID
   const user = await User.findByIdAndUpdate(_id, { doctor, role: 'secretary' }, { new: true, runValidators: true });
 
   res.status(200).json({
