@@ -1,6 +1,8 @@
+const sharp = require('sharp');
 const factory = require('./handlerFactory');
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
+const multerUpload = require('../utils/multer');
 
 const getAllUsers = factory.getAll(User);
 
@@ -11,6 +13,21 @@ const createUser = factory.createOne(User);
 const updateUser = factory.updateOne(User);
 
 const deleteUser = factory.deleteOne(User);
+
+const uploadPhoto = multerUpload.single('photo');
+
+const processPhoto = async (req, res, next) => {
+  if (!req.file) return next();
+
+  req.body.photo = `user-${req.user._id}-${Date.now()}.jpeg`;
+  await sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(`${__dirname}/../photos/users/${req.body.photo}`);
+
+  next();
+};
 
 const updateMe = async (req, res, next) => {
   const { name, photo, birthday, idCard, email } = req.body;
@@ -92,6 +109,8 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
+  uploadPhoto,
+  processPhoto,
   updateMe,
   deleteMe,
   updateDoctor,
