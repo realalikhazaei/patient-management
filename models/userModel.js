@@ -178,9 +178,16 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-//Virtual reference
+//Virtual reference for visits
 userSchema.virtual('visits', {
   ref: 'Visit',
+  localField: '_id',
+  foreignField: 'doctor',
+});
+
+//Virtual reference for reviews
+userSchema.virtual('reviews', {
+  ref: 'Review',
   localField: '_id',
   foreignField: 'doctor',
 });

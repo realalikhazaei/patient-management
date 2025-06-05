@@ -52,12 +52,16 @@ const updateDoctor = async (req, res, next) => {
   });
 };
 
-const getDoctorAndVisits = async (req, res, next) => {
+const getDoctor = async (req, res, next) => {
   const doctor = await User.findOne({ _id: req.params._id, role: 'doctor' })
     .select('-idCard -email -createdAt -updatedAt -active')
     .populate({
       path: 'visits',
       select: 'dateTime closed',
+    })
+    .populate({
+      path: 'reviews',
+      select: 'rating comment',
     });
 
   res.status(200).json({
@@ -91,6 +95,6 @@ module.exports = {
   updateMe,
   deleteMe,
   updateDoctor,
-  getDoctorAndVisits,
+  getDoctor,
   addSecretary,
 };

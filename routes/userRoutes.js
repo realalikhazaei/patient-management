@@ -8,14 +8,14 @@ const {
   updateMe,
   deleteMe,
   updateDoctor,
-  getDoctorAndVisits,
+  getDoctor,
   addSecretary,
 } = require('../controllers/userController');
 const { protectRoute, restrictTo } = require('../controllers/authController');
 
 const router = express.Router();
 
-router.get('/doctor/:_id', getDoctorAndVisits);
+router.get('/doctor/:_id', getDoctor);
 
 router.use(protectRoute);
 
