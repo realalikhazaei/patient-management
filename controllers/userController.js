@@ -2,6 +2,7 @@ const sharp = require('sharp');
 const factory = require('./handlerFactory');
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
+const APIFeatures = require('../utils/apiFeatures');
 const multerUpload = require('../utils/multer');
 
 const getAllUsers = factory.getAll(User);
@@ -69,8 +70,9 @@ const updateDoctor = async (req, res, next) => {
   });
 };
 
-const getDoctor = async (req, res, next) => {
-  const doctor = await User.findOne({ _id: req.params._id, role: 'doctor' })
+const getDoctors = async (req, res, next) => {
+  //Change based on the info on Soroush
+  const query = User.find({ role: 'doctor' })
     .select('-idCard -email -createdAt -updatedAt -active')
     .populate({
       path: 'visits',
@@ -80,11 +82,13 @@ const getDoctor = async (req, res, next) => {
       path: 'reviews',
       select: 'rating comment',
     });
+  const features = new APIFeatures(query, req.query);
+  const doctors = await features.query;
 
   res.status(200).json({
     status: 'success',
-    results: doctor.visits.length,
-    data: doctor,
+    results: doctors.length,
+    data: doctors,
   });
 };
 
@@ -114,6 +118,6 @@ module.exports = {
   updateMe,
   deleteMe,
   updateDoctor,
-  getDoctor,
+  getDoctors,
   addSecretary,
 };
