@@ -2,6 +2,9 @@ const express = require('express');
 const morgan = require('morgan');
 const compression = require('compression');
 const helmet = require('helmet');
+const cors = require('cors');
+const swaggerUI = require('swagger-ui-express');
+const swaggerDoc = require('./docs/swaggerDoc');
 const drugRouter = require('./routes/drugRoutes');
 const userRouter = require('./routes/userRoutes');
 const authRouter = require('./routes/authRoutes');
@@ -66,12 +69,19 @@ app.use((req, res, next) => {
   next();
 });
 
+//Enable CORS
+app.use(cors());
+
+//API Docs
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
+
 //Routers
 app.use('/api/v1/drugs', drugRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/visits', visitRouter);
 app.use('/api/v1/reviews', reviewRouter);
+app.options(/.*/, cors());
 
 //Error handling
 app.use(/.*/, (req, res, next) => {

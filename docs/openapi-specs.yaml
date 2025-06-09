@@ -1,0 +1,1696 @@
+openapi: 3.0.3
+info:
+  title: Patient Management
+  description: RESTful API for managing patients
+  version: 1.0.0
+  contact: {}
+servers:
+  - url: http://127.0.0.1:5000
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+paths:
+  /api/v1/drugs:
+    get:
+      tags:
+        - Drugs
+      summary: Get All Drugs (Admin, Doctor)
+      description: |-
+        **\--دریافت لیست تمام داروها--**
+
+        امکانات:
+
+        فیلتر کردن نتایج بر اساس مقدار
+
+        محدود کردن فیلدهای خروجی
+
+        محدود کردن تعداد نتایج
+
+        مرتب سازی نتایج
+
+        صفحه بندی نتایج
+      operationId: getAllDrugsAdminDoctor
+      parameters:
+        - name: fields
+          in: query
+          schema:
+            type: string
+            example: name,category,image
+          description: >-
+            فیلدهای خروجی هر داکیومنت، می‌بایست اسامی فیلدهای مدنظر با ویرگول
+            جدا شود
+        - name: sort
+          in: query
+          schema:
+            type: string
+            example: category,-name
+          description: >-
+            مرتب کردن جستجو بر اساس یک یا چند فیلد، برای ترتیب نزولی یک علامت
+            منفی - کنار نام فیلد گذاشته شود، فیلدهای مدنظر با ویرگول جدا شود
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1'
+          description: شماره صفحه، مقدار پیش فرض 1
+        - name: limit
+          in: query
+          schema:
+            type: string
+            example: '5'
+          description: تعداد نتایج در هر صفحه، مقدار پیش فرض 10
+        - name: name
+          in: query
+          schema:
+            type: string
+            example: amoxicillin,gabapentin
+          description: جستجو بر اساس یک یا چند مقدار مشخص
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    post:
+      tags:
+        - Drugs
+      summary: Create A Drug (Admin)
+      description: |-
+        **\--ایجاد یک دارو--**
+
+        فیلدهای موجود:
+
+        name: نام دارو (ضروری، غیرتکراری)
+
+        category: دسته بندی دارو (ضروری)
+
+        image: عکس دارو
+      operationId: createADrugAdmin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  example: antibiotic
+                name:
+                  type: string
+                  example: amoxicilin
+            examples:
+              Create A Drug (Admin):
+                value:
+                  category: antibiotic
+                  name: amoxicilin
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/drugs/{_id}:
+    get:
+      tags:
+        - Drugs
+      summary: Get A Drug (Admin, Doctor)
+      description: '**\--دریافت یک دارو بر اساس آیدی دارو--**'
+      operationId: getADrugAdminDoctor
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - Drugs
+      summary: Delete A Drug (Admin)
+      description: '**\--حذف یک دارو بر اساس آیدی دارو--**'
+      operationId: deleteADrugAdmin
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    patch:
+      tags:
+        - Drugs
+      summary: Update A Drug (Admin)
+      description: '**\--ویرایش یک دارو بر اساس آیدی دارو--**'
+      operationId: updateADrugAdmin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: amoxicilin
+            examples:
+              Update A Drug (Admin):
+                value:
+                  name: amoxicilin
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: _id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ''
+        description: با مقدار آیدی جایگزین شود
+  /api/v1/users:
+    get:
+      tags:
+        - Users
+      summary: Get All Users (Admin)
+      description: |-
+        **\--دریافت لیست تمام کاربران--**
+
+        امکانات:
+
+        فیلتر کردن نتایج بر اساس مقدار
+
+        محدود کردن فیلدهای خروجی
+
+        محدود کردن تعداد نتایج
+
+        مرتب سازی نتایج
+
+        صفحه بندی نتایج
+      operationId: getAllUsersAdmin
+      parameters:
+        - name: fields
+          in: query
+          schema:
+            type: string
+            example: name,email,idCard,phone
+        - name: sort
+          in: query
+          schema:
+            type: string
+            example: '-idCard'
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1'
+        - name: limit
+          in: query
+          schema:
+            type: string
+            example: '5'
+        - name: phone
+          in: query
+          schema:
+            type: string
+            example: '9121234567'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    post:
+      tags:
+        - Users
+      summary: Create A User (Admin)
+      description: >-
+        **\--ایجاد یک کاربر--**
+
+
+        فیلدهای موجود:
+
+
+        password: رمز (ضروری، حداقل 8 کاراکتر)  
+
+        passwordConfirm: تائید رمز (ضروری، حداقل 8 کاراکتر)  
+
+        role: نقش کاربر (صرفا مقادیر patient, secretary, doctor, admin را
+        میپذیرد)  
+
+        active: وضعیت فعال بودن حساب  
+
+        name: نام کامل کاربر (حداقل دو کلمه)  
+
+        photo: عکس کاربر  
+
+        phone: شماره تلفن (دقیقا 10 کاراکتر)  
+
+        email: ایمیل (حداکثر 100 کاراکتر)  
+
+        idCard: شماره ملی (دقیقا 10 کاراکتر)  
+
+        birthday: تاریخ تولد (بزرگترین سن 120 سال)  
+
+        doctor: آیدی دکتر (مربوط به نقش منشی)
+
+
+        doctorOptions: تنظیمات دکتر (شامل ساب فیلد)
+
+
+        فیلدهای موجود در doctorOptions:
+
+
+        specification: تخصص دکتر (شامل مقادیر از پیش تعیین شده، برای تست با
+        general پر شود)  
+
+        mcNumber: کد نظام پزشکی (دقیقا 10 کاراکتر)  
+
+        visitWeekdays: روزهای ویزیت (شامل اعداد صحیح از 0 تا 6)  
+
+        visitRange: بازه ویزیت (شامل ساعت آغاز و پایان)
+
+
+        visitExceptions: روز استثناء (تاریخ استثناء برای عدم ویزیت)
+      operationId: createAUserAdmin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                birthday:
+                  type: string
+                  example: '2000-01-01T00:00:00.000+00:00'
+                email:
+                  type: string
+                  example: johndoe@gmail.com
+                idCard:
+                  type: string
+                  example: '0311234567'
+                name:
+                  type: string
+                  example: John Doe
+                password:
+                  type: string
+                  example: '12345678'
+                passwordConfirm:
+                  type: string
+                  example: '12345678'
+            examples:
+              Create A User (Admin):
+                value:
+                  birthday: '2000-01-01T00:00:00.000+00:00'
+                  email: johndoe@gmail.com
+                  idCard: '0311234567'
+                  name: John Doe
+                  password: '12345678'
+                  passwordConfirm: '12345678'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/users/{_id}:
+    get:
+      tags:
+        - Users
+      summary: Get A User (Admin)
+      description: '**\--دریافت یک کاربر بر اساس آیدی کاربر--**'
+      operationId: getAUserAdmin
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - Users
+      summary: Delete A User (Admin)
+      description: '**\--حذف یک کاربر بر اساس آیدی کاربر--**'
+      operationId: deleteAUserAdmin
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    patch:
+      tags:
+        - Users
+      summary: Update A User (Admin)
+      description: '**\--ویرایش یک کاربر بر اساس آیدی کاربر--**'
+      operationId: updateAUserAdmin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                birthday:
+                  type: string
+                  example: '2000-01-01T00:00:00.000+00:00'
+                email:
+                  type: string
+                  example: johndoe@gmail.com
+                idCard:
+                  type: string
+                  example: '0311234567'
+                name:
+                  type: string
+                  example: John Doe
+            examples:
+              Update A User (Admin):
+                value:
+                  birthday: '2000-01-01T00:00:00.000+00:00'
+                  email: johndoe@gmail.com
+                  idCard: '0311234567'
+                  name: John Doe
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: _id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ''
+        description: با مقدار آیدی جایگزین شود
+  /api/v1/users/doctor:
+    get:
+      tags:
+        - Users
+      summary: Get All Doctors (Public)
+      description: |-
+        **\--دریافت لیست تمامی دکترها--**
+
+        امکانات:
+
+        فیلتر کردن نتایج بر اساس مقدار
+
+        محدود کردن فیلدهای خروجی
+
+        محدود کردن تعداد نتایج
+
+        مرتب سازی نتایج
+
+        صفحه بندی نتایج
+      operationId: getAllDoctorsPublic
+      responses:
+        '200':
+          description: ''
+  /api/v1/users/doctor/{_id}:
+    get:
+      tags:
+        - Users
+      summary: Get Doctor With Visits and Reviews (Public)
+      description: >-
+        **\--دریافت یک دکتر بر اساس آیدی دکتر به همراه دیدگاه ها و تاریخ ویزیت
+        های دکتر--**
+      operationId: getDoctorWithVisitsAndReviewsPublic
+      responses:
+        '200':
+          description: ''
+    parameters:
+      - name: _id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ''
+        description: با مقدار آیدی جایگزین شود
+  /api/v1/users/update-account:
+    patch:
+      tags:
+        - Users
+      summary: Update Account (All Users)
+      description: >-
+        **\--ویرایش حساب کاربری--**
+
+
+        به منظور فراهم بودن قابلیت آپلود کردن عکس، از اینپوت با انکود
+        multipart/form-data استفاده شود
+
+
+        عکس ها به ابعاد 500x500 برش داده شده و به همراه آیدی کاربر و زمان حاضر
+        ثبت خواهند شد
+      operationId: updateAccountAllUsers
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                birthday:
+                  type: string
+                  example: ''
+                email:
+                  type: string
+                  example: ''
+                idCard:
+                  type: string
+                  example: ''
+                name:
+                  type: string
+                  example: ''
+                photo:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/users/delete-account:
+    patch:
+      tags:
+        - Users
+      summary: Delete Account (All Users)
+      description: >-
+        **\--حذف حساب کاربری--**
+
+
+        حذف حساب از طریق این ریکوئست به معنای تغییر یافتن مقدار فیلد active به
+        false (غیرفعال سازی حساب کاربر) می باشد.
+      operationId: deleteAccountAllUsers
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/users/add-secretary:
+    patch:
+      tags:
+        - Users
+      summary: Add Secretary (Admin)
+      description: |-
+        **\--تعیین منشی--**
+
+        به منظور تغییر دادن نقش یک فرد به منشی
+
+        فیلدهای ضروری:
+
+        user: آیدی کاربر
+
+        doctor: آیدی دکتر مرتبط
+      operationId: addSecretaryAdmin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                doctor:
+                  type: string
+                  example: doctor id
+                user:
+                  type: string
+                  example: user id
+            examples:
+              Add Secretary (Admin):
+                value:
+                  doctor: doctor id
+                  user: user id
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/auth/verify-email/:
+    get:
+      tags:
+        - Authorization
+      summary: Get Email Verification Link (All Users)
+      description: >-
+        **\--دریافت لینک تائید ایمیل--**
+
+
+        توجه: پس از ساخت حساب جدید و هر ویرایش ایمیل، ایمیل به حالت تائید نشده
+        درآمده و می بایست از طریق این ریکوئست لینک تائید ایمیل جدیدی دریافت کرد.
+      operationId: getEmailVerificationLinkAllUsers
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/auth/verify-email/{token}:
+    post:
+      tags:
+        - Authorization
+      summary: Verify Email (All Users)
+      description: >-
+        **\--تائید ایمیل از طریق توکن--**
+
+
+        توجه: لینک تائید ایمیل حاوی توکنی است که باید به این اندپوینت بدون نیاز
+        به تکمیل فیلد دیگری ارسال شود.
+      operationId: verifyEmailAllUsers
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: token
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ''
+        description: با مقدار توکن تائید ایمیل جایگزین شود
+  /api/v1/auth/otp:
+    post:
+      tags:
+        - Authorization
+      summary: Get OTP (Public)
+      description: >-
+        **\--دریافت رمز یکبار مصرف برای شماره تلفن--**
+
+
+        توجه: این رکوئست برای چهار منظور زیر استفاده میشود:
+
+
+        یک) ثبت نام از طریق شماره تلفن (عدم نیاز به توکن احراز هویت)
+
+
+        دو) ورود از طریق شماره تلفن (عدم نیاز به توکن احراز هویت)
+
+
+        سه) تغییر شماره تلفن (نیازمند توکن احراز هویت)
+
+
+        چهار) افزودن شماره تلفن (نیازمند توکن احراز هویت)
+
+
+        برای دو حالت اول، از فیلد phone برای فرستادن شماره تلفن و دریافت رمز
+        یکبار مصرف استفاده شود. سپس رمز یکبار مصرف به همراه شماره تلفن در
+        ریکوئست «ورود با تلفن همراه» قرار داده شود.
+
+
+        برای دو حالت دوم، از فیلد newPhone برای ثبت شماره تلفن جدید و دریافت رمز
+        یکبار مصرف برای آن شماره استفاده شود. سپس رمز یکبار مصرف بدون شماره تلفن
+        در ریکوئست «تغییر شماره تلفن همراه» قرار داده شود.
+
+
+        فیلدهای موجود:
+
+
+        phone: شماره تلفن همراه (دقیقا 10 کاراکتر)
+
+
+        newPhone: شماره تلفن همراه جدید (دقیقا 10 کاراکتر)
+      operationId: getOtpPublic
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: string
+                  example: '09121234567'
+            examples:
+              Get OTP (Public):
+                value:
+                  phone: '09121234567'
+      responses:
+        '200':
+          description: ''
+  /api/v1/auth/sign-up/email:
+    post:
+      tags:
+        - Authorization
+      summary: Sign Up With Email (Public)
+      description: |-
+        **\--ثبت نام از طریق ایمیل--**
+
+        برای ثبت نام کاربران با نقش بیمار از این ریکوئست استفاده شود.
+
+        فیلدهای ضروری در این ریکوئست:
+
+        password: رمز (ضروری، حداقل 8 کاراکتر)  
+        passwordConfirm: تائید رمز (ضروری، حداقل 8 کاراکتر)  
+        email: ایمیل (حداکثر 100 کاراکتر)
+
+        سایر فیلدها:
+
+        name: نام کامل کاربر (حداقل دو کلمه)  
+        idCard: شماره ملی (دقیقا 10 کاراکتر)  
+        birthday: تاریخ تولد (بزرگترین سن 120 سال)
+      operationId: signUpWithEmailPublic
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                birthday:
+                  type: string
+                  example: '2000-01-01T00:00:00.000+00:00'
+                email:
+                  type: string
+                  example: johndoe@gmail.com
+                idCard:
+                  type: string
+                  example: '0311234567'
+                name:
+                  type: string
+                  example: John Doe
+                password:
+                  type: string
+                  example: '12345678'
+                passwordConfirm:
+                  type: string
+                  example: '12345678'
+            examples:
+              Sign Up With Email (Public):
+                value:
+                  birthday: '2000-01-01T00:00:00.000+00:00'
+                  email: johndoe@gmail.com
+                  idCard: '0311234567'
+                  name: John Doe
+                  password: '12345678'
+                  passwordConfirm: '12345678'
+      responses:
+        '200':
+          description: ''
+  /api/v1/auth/login/email:
+    post:
+      tags:
+        - Authorization
+      summary: Login With Email (Public)
+      description: |-
+        **\--ورود از طریق ایمیل--**
+
+        برای ورود کاربران با تمامی نقش ها از این ریکوئست استفاده شود.
+
+        فیلدهای ضروری در این ریکوئست:
+
+        email: ایمیل (حداکثر 100 کاراکتر)
+
+        password: رمز (ضروری، حداقل 8 کاراکتر)
+      operationId: loginWithEmailPublic
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: johndoe@gmail.com
+                password:
+                  type: string
+                  example: '12345678'
+            examples:
+              Login With Email (Public):
+                value:
+                  email: johndoe@gmail.com
+                  password: '12345678'
+      responses:
+        '200':
+          description: ''
+  /api/v1/auth/login/phone:
+    post:
+      tags:
+        - Authorization
+      summary: Login With Phone (Public)
+      description: |-
+        **\--ورود از طریق تلفن همراه--**
+
+        برای ورود کاربران با تمامی نقش ها از این ریکوئست استفاده شود.
+
+        فیلدهای ضروری در این ریکوئست:
+
+        phone: شماره تلفن همراه (دقیقا 10 کاراکتر)  
+        otp: رمز یکبار مصرف (ضروری، در قالب string)
+      operationId: loginWithPhonePublic
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                otp:
+                  type: string
+                  example: otp number
+                phone:
+                  type: string
+                  example: '09121234567'
+            examples:
+              Login With Phone (Public):
+                value:
+                  otp: otp number
+                  phone: '09121234567'
+      responses:
+        '200':
+          description: ''
+  /api/v1/auth/forgot-password:
+    post:
+      tags:
+        - Authorization
+      summary: Forgot Password (Public)
+      description: |-
+        **\--دریافت لینک بازیابی رمز (فراموشی رمز)--**
+
+        فیلدهای ضروری:
+
+        email: ایمیل
+      operationId: forgotPasswordPublic
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: johndoe@gmail.com
+            examples:
+              Forgot Password (Public):
+                value:
+                  email: johndoe@gmail.com
+      responses:
+        '200':
+          description: ''
+  /api/v1/auth/reset-password/{token}:
+    patch:
+      tags:
+        - Authorization
+      summary: Reset Password (Public)
+      description: |-
+        **\--بازیابی رمز عبور--**
+
+        توجه: توکن موجود در لینک بازیابی رمز در این اندپوینت جایگزین شود.
+
+        فیلدهای ضروری:
+
+        password: رمز (ضروری، حداقل 8 کاراکتر)  
+        passwordConfirm: تائید رمز (ضروری، حداقل 8 کاراکتر)
+      operationId: resetPasswordPublic
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  example: '12345678'
+                passwordConfirm:
+                  type: string
+                  example: '12345678'
+            examples:
+              Reset Password (Public):
+                value:
+                  password: '12345678'
+                  passwordConfirm: '12345678'
+      responses:
+        '200':
+          description: ''
+    parameters:
+      - name: token
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ''
+        description: با مقدار توکن بازیابی رمز جایگزین شود
+  /api/v1/auth/update-phone:
+    patch:
+      tags:
+        - Authorization
+      summary: Update Phone (All Users)
+      description: >-
+        **\--تغییر شماره تلفن همراه--**
+
+
+        توجه: رمز یکبار مصرف دریافت شده (برای شماره جدید) در این ریکوئست قرار
+        داده شود.
+
+
+        فیلدهای ضروری:
+
+
+        otp: رمز یکبار مصرف (ضروری)
+      operationId: updatePhoneAllUsers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                otp:
+                  type: string
+                  example: '696627'
+            examples:
+              Update Phone (All Users):
+                value:
+                  otp: '696627'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/auth/update-password:
+    patch:
+      tags:
+        - Authorization
+      summary: Update Password (All Users)
+      description: |-
+        **\--تغییر رمز عبور--**
+
+        توجه: این ریکوئست صرفا برای تغییر دادن رمز کاربر لاگین شده است.
+
+        فیلدهای ضروری:
+
+        currentPassword: رمز فعلی
+
+        newPassword: رمز جدید (ضروری، حداقل 8 کاراکتر)
+
+        newPasswordConfirm: تائید رمز جدید (ضروری، حداقل 8 کاراکتر)
+      operationId: updatePasswordAllUsers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  type: string
+                  example: '12345678'
+                newPassword:
+                  type: string
+                  example: '87654321'
+                newPasswordConfirm:
+                  type: string
+                  example: '87654321'
+            examples:
+              Update Password (All Users):
+                value:
+                  currentPassword: '12345678'
+                  newPassword: '87654321'
+                  newPasswordConfirm: '87654321'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/auth/set-password:
+    patch:
+      tags:
+        - Authorization
+      summary: Set Password (All Users)
+      description: >-
+        **\--تعیین رمز عبور--**
+
+
+        توجه: این ریکوئست صرفا برای تعیین رمز عبور حساب برای کاربر لاگین شده
+        است. کاربرد آن برای کاربرانی است که با شماره تلفن همراه ثبت نام کرده و
+        رمز عبوری در هنگام ثبت نام تعیین نکرده اند.
+
+
+        فیلدهای ضروری:
+
+
+        password: رمز (ضروری، حداقل 8 کاراکتر)  
+
+        passwordConfirm: تائید رمز (ضروری، حداقل 8 کاراکتر)
+      operationId: setPasswordAllUsers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  example: '12345678'
+                passwordConfirm:
+                  type: string
+                  example: '12345678'
+            examples:
+              Set Password (All Users):
+                value:
+                  password: '12345678'
+                  passwordConfirm: '12345678'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/visits:
+    get:
+      tags:
+        - Visits
+      summary: Get All Visits (Admin)
+      description: |-
+        **\--دریافت لیست تمام ویزیت ها--**
+
+        امکانات:
+
+        فیلتر کردن نتایج بر اساس مقدار
+
+        محدود کردن فیلدهای خروجی
+
+        محدود کردن تعداد نتایج
+
+        مرتب سازی نتایج
+
+        صفحه بندی نتایج
+      operationId: getAllVisitsAdmin
+      parameters:
+        - name: fields
+          in: query
+          schema:
+            type: string
+            example: name,category,image
+        - name: sort
+          in: query
+          schema:
+            type: string
+            example: category,-name
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1'
+        - name: limit
+          in: query
+          schema:
+            type: string
+            example: '5'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    post:
+      tags:
+        - Visits
+      summary: Create A Visit (Admin)
+      description: |-
+        **\--ایجاد یک ویزیت--**
+
+        فیلدهای موجود:
+
+        patient: آیدی بیمار (ضروری)
+
+        doctor: آیدی دکتر (ضروری)
+
+        closed: وضعیت فعال بودن ویزیت
+
+        dateTime: تاریخ و زمان ویزیت (ضروری، در بازه زمانی یک ماه آینده)
+
+        prescriptions: نسخه دکتر (شامل ساب فیلد)
+
+        فیلدهای موجود در prescriptions:
+
+        drug: نام دارو
+
+        count: تعداد دارو
+
+        usage: نحوه مصرف دارو (حداکثر 200 کاراکتر)
+      operationId: createAVisitAdmin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dateTime:
+                  type: string
+                  example: '2025-01-01T08:00:00.000+00:00'
+                doctor:
+                  type: string
+                  example: doctor id
+                patient:
+                  type: string
+                  example: patient id
+            examples:
+              Create A Visit (Admin):
+                value:
+                  dateTime: '2025-01-01T08:00:00.000+00:00'
+                  doctor: doctor id
+                  patient: patient id
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/visits/{_id}:
+    get:
+      tags:
+        - Visits
+      summary: Get A Visit (Admin)
+      description: '**\--دریافت یک ویزیت بر اساس آیدی ویزیت--**'
+      operationId: getAVisitAdmin
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - Visits
+      summary: Delete A Visit (Admin)
+      description: '**\--حذف یک ویزیت بر اساس آیدی ویزیت--**'
+      operationId: deleteAVisitAdmin
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    patch:
+      tags:
+        - Visits
+      summary: Update A Visit (Admin)
+      description: '**\--ویرایش یک ویزیت بر اساس آیدی ویزیت--**'
+      operationId: updateAVisitAdmin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dateTime:
+                  type: string
+                  example: '2025-01-01T08:00:00.000+00:00'
+                doctor:
+                  type: string
+                  example: doctor id
+                patient:
+                  type: string
+                  example: patient id
+            examples:
+              Update A Visit (Admin):
+                value:
+                  dateTime: '2025-01-01T08:00:00.000+00:00'
+                  doctor: doctor id
+                  patient: patient id
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: _id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ''
+        description: با مقدار آیدی جایگزین شود
+  /api/v1/visits/patient:
+    get:
+      tags:
+        - Visits
+      summary: Get All My Visits (Patient)
+      description: '**\--دریافت لیست ویزیت های شخصی بیمار--**'
+      operationId: getAllMyVisitsPatient
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    post:
+      tags:
+        - Visits
+      summary: Book A Visit (Patient)
+      description: >-
+        **\--رزرو کردن یک ویزیت شخصی بیمار--**
+
+
+        توجه 1: هر بیمار در هر روز تنها میتواند یک ویزیت با یک دکتر مشخص داشته
+        باشد. رزرو کردن ویزیت با دکترهای دیگر مانعی ندارد.
+
+
+        توجه 2: رزرو ویزیت در صورتی امکان پذیر است که اطلاعات حساب بیمار شامل
+        نام (name)، تاریخ تولد (birthday) و شماره ملی (idCard) تکمیل شده باشند.
+
+
+        فیلدهای ضروری:
+
+
+        doctor: آیدی دکتر
+
+
+        dateTime: تاریخ و ساعت ویزیت (تنها مقادیر رند با ربع ساعت و مطابق با
+        تنظیمات ویزیت دکتر قابل قبول است)
+      operationId: bookAVisitPatient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dateTime:
+                  type: string
+                  example: '2025-01-01T08:00:00.000+00:00'
+                doctor:
+                  type: string
+                  example: doctor id
+            examples:
+              Book A Visit (Patient):
+                value:
+                  dateTime: '2025-01-01T08:00:00.000+00:00'
+                  doctor: doctor id
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/visits/{_id}/patient:
+    get:
+      tags:
+        - Visits
+      summary: Get My Visit (Patient)
+      description: '**\--دریافت یک ویزیت های شخصی بیمار بر اساس آیدی ویزیت--**'
+      operationId: getMyVisitPatient
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - Visits
+      summary: Delete My Visit (Patient)
+      description: '**\--حذف کردن یک ویزیت شخصی بیمار بر اساس آیدی ویزیت--**'
+      operationId: deleteMyVisitPatient
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: _id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ''
+        description: با مقدار آیدی جایگزین شود
+  /api/v1/visits/doctor:
+    get:
+      tags:
+        - Doctors
+      summary: Get All Doctor Visits (Doctor, Secretary)
+      description: >-
+        **\--دریافت لیست ویزیت های شخصی دکتر--**
+
+
+        توجه: برای دریافت لیست ویزیت ها، آیدی دکتر یا از طریق حساب دکتر یا حساب
+        منشی بصورت خودکار برداشته میشود.
+      operationId: getAllDoctorVisitsDoctorSecretary
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/visits/doctor/today:
+    get:
+      tags:
+        - Doctors
+      summary: Get All Doctor Visits Today (Doctor, Secretary)
+      description: '**\--دریافت لیست ویزیت های شخصی دکتر برای روز فعلی--**'
+      operationId: getAllDoctorVisitsTodayDoctorSecretary
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/visits/{_id}/doctor:
+    get:
+      tags:
+        - Doctors
+      summary: Get A Doctor Visit (Doctor)
+      description: '**\--دریافت یک ویزیت های شخصی دکتر بر اساس آیدی ویزیت--**'
+      operationId: getADoctorVisitDoctor
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: _id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ''
+        description: با مقدار آیدی جایگزین شود
+  /api/v1/auth/sign-up/email/doctor:
+    post:
+      tags:
+        - Doctors
+      summary: Sign Up Doctor With Email (Public)
+      description: >-
+        **\--ثبت نام دکتر از طریق ایمیل--**
+
+
+        توجه: برای ثبت نام با نقش دکتر صرفا از این ریکوئست استفاده شود.
+
+
+        فیلدهای ضروری:
+
+
+        name: نام کامل دکتر(حداقل دو کلمه)
+
+
+        email: ایمیل (حداکثر 100 کاراکتر)
+
+
+        idCard: شماره ملی (دقیقا 10 کاراکتر)
+
+
+        password: رمز (ضروری، حداقل 8 کاراکتر)
+
+
+        passwordConfirm: تائید رمز (ضروری، حداقل 8 کاراکتر)
+
+
+        specification: تخصص دکتر (شامل مقادیر از پیش تعیین شده، برای تست با
+        general پر شود)
+
+
+        mcNumber: کد نظام پزشکی (دقیقا 10 کاراکتر)
+      operationId: signUpDoctorWithEmailPublic
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: hossein_mehrzad@gmail.com
+                idCard:
+                  type: string
+                  example: '0312181930'
+                mcNumber:
+                  type: string
+                  example: '1234567890'
+                name:
+                  type: string
+                  example: Hossein Mehrzad
+                password:
+                  type: string
+                  example: '88412114'
+                passwordConfirm:
+                  type: string
+                  example: '88412114'
+                specification:
+                  type: string
+                  example: general surgery
+            examples:
+              Sign Up Doctor With Email (Public):
+                value:
+                  email: hossein_mehrzad@gmail.com
+                  idCard: '0312181930'
+                  mcNumber: '1234567890'
+                  name: Hossein Mehrzad
+                  password: '88412114'
+                  passwordConfirm: '88412114'
+                  specification: general surgery
+      responses:
+        '200':
+          description: ''
+  /api/v1/users/update-account/doctor-options:
+    patch:
+      tags:
+        - Doctors
+      summary: Update Doctor Options (Doctor)
+      description: |-
+        **\--ویرایش تنظیمات دکتر--**
+
+        توجه: این ریکوئست صرفا برای ویرایش تنظیمات مربوط به حساب دکتر است.
+
+        فیلدهای موجود:
+
+        visitRange: بازه ویزیت (شامل ساعت آغاز و پایان)
+
+        visitWeekdays: روزهای ویزیت (شامل اعداد صحیح از 0 تا 6)
+      operationId: updateDoctorOptionsDoctor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                visitRange:
+                  type: array
+                  items:
+                    type: string
+                    example: '7: 00'
+                  example:
+                    - '7: 00'
+                    - '14: 00'
+                visitWeekdays:
+                  type: array
+                  items:
+                    type: number
+                    example: 0
+                  example:
+                    - 0
+                    - 2
+                    - 4
+            examples:
+              Update Doctor Options (Doctor):
+                value:
+                  visitRange:
+                    - '7: 00'
+                    - '14: 00'
+                  visitWeekdays:
+                    - 0
+                    - 2
+                    - 4
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/visits/{_id}/prescription:
+    patch:
+      tags:
+        - Doctors
+      summary: Add Prescription (Doctor)
+      description: >-
+        **\--افزودن نسخه دکتر بر اساس آیدی ویزیت--**
+
+
+        توجه 1: این ریکوئست صرفا برای افزودن نسخه توسط دکتر برای ویزیت مربوط به
+        خود استفاده می شود.
+
+
+        توجه 2: قرار دادن مقادیر در این فیلد دقیقا مطابق نمونه تعریف شده به
+        عنوان مقدار فیلد prescriptions باشد.
+
+
+        توجه 3: هر دارو باید یک object شامل فیلدهای ضروری باشد.
+
+
+        فیلدهای ضروری:
+
+
+        drug: نام دارو
+
+
+        count: تعداد دارو
+      operationId: addPrescriptionDoctor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                prescriptions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      count:
+                        type: number
+                        example: 20
+                      drug:
+                        type: string
+                        example: amoxicillin
+                  example:
+                    - count: 20
+                      drug: amoxicillin
+            examples:
+              Add Prescription (Doctor):
+                value:
+                  prescriptions:
+                    - count: 20
+                      drug: amoxicillin
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: _id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ''
+        description: با مقدار آیدی جایگزین شود
+  /api/v1/visits/{_id}/doctor/close-visit:
+    patch:
+      tags:
+        - Doctors
+      summary: Close A Visit (Doctor, Secretary)
+      description: '**\--بستن وضعیت یک ویزیت بر اساس آیدی ویزیت--**'
+      operationId: closeAVisitDoctorSecretary
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: _id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ''
+        description: با مقدار آیدی جایگزین شود
+  /api/v1/reviews:
+    get:
+      tags:
+        - Reviews
+      summary: Get All Reviews (Admin)
+      description: |-
+        **\--دریافت لیست تمام دیدگاه ها--**
+
+        امکانات:
+
+        فیلتر کردن نتایج بر اساس مقدار
+
+        محدود کردن فیلدهای خروجی
+
+        محدود کردن تعداد نتایج
+
+        مرتب سازی نتایج
+
+        صفحه بندی نتایج
+      operationId: getAllReviewsAdmin
+      parameters:
+        - name: fields
+          in: query
+          schema:
+            type: string
+            example: name,category,image
+        - name: sort
+          in: query
+          schema:
+            type: string
+            example: category,-name
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1'
+        - name: limit
+          in: query
+          schema:
+            type: string
+            example: '5'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    post:
+      tags:
+        - Reviews
+      summary: Create A Review (Admin)
+      description: |-
+        **\--ایجاد یک دیدگاه--**
+
+        فیلدهای موجود:
+
+        rating: امتیاز عددی (ضروری، عدد صحیح بین 1 تا 5)
+
+        comment: دیدگاه متنی (ضروری، حداقل 10 کاراکتر، حداکثر 300 کاراکتر)
+
+        patient: آیدی بیمار (ضروری)
+
+        doctor: آیدی دکتر (ضروری)
+      operationId: createAReviewAdmin
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Create A Review (Admin):
+                value: ''
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /api/v1/reviews/{_id}:
+    get:
+      tags:
+        - Reviews
+      summary: Get A Review (Admin)
+      description: '**\--دریافت یک دیدگاه بر اساس آیدی دیدگاه--**'
+      operationId: getAReviewAdmin
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - Reviews
+      summary: Delete A Review (Admin)
+      description: '**\--حذف یک دیدگاه بر اساس آیدی دیدگاه--**'
+      operationId: deleteAReviewAdmin
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    patch:
+      tags:
+        - Reviews
+      summary: Update A Review (Admin)
+      description: '**\--ویرایش یک دیدگاه بر اساس آیدی دیدگاه--**'
+      operationId: updateAReviewAdmin
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Update A Review (Admin):
+                value: ''
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: _id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ''
+        description: با مقدار آیدی جایگزین شود
+  /api/v1/reviews/{_id}/patient:
+    get:
+      tags:
+        - Reviews
+      summary: Get My Review (Patient)
+      description: '**\--دریافت یک دیدگاه شخصی بیمار بر اساس آیدی دیدگاه--**'
+      operationId: getMyReviewPatient
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - Reviews
+      summary: Delete My Review (Patient)
+      description: '**\--حذف یک دیدگاه شخصی بیمار بر اساس آیدی دیدگاه--**'
+      operationId: deleteMyReviewPatient
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    patch:
+      tags:
+        - Reviews
+      summary: Update My Review (Patient)
+      description: '**\--ویرایش یک دیدگاه شخصی بیمار بر اساس آیدی دیدگاه--**'
+      operationId: updateMyReviewPatient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: string
+                  example: '    I really enjoyed my time with the doctor.'
+            examples:
+              Update My Review (Patient):
+                value:
+                  comment: '    I really enjoyed my time with the doctor.'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: _id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ''
+        description: با مقدار آیدی جایگزین شود
+  /api/v1/reviews/patient:
+    post:
+      tags:
+        - Reviews
+      summary: Add My Review (Patient)
+      description: |-
+        **\--نوشتن دیدگاه شخصی بیمار--**
+
+        توجه: نوشتن دیدگاه صرفا برای ویزیت های با وضعیت بسته امکان پذیر است.
+
+        فیلدهای موجود:
+
+        rating: امتیاز عددی (ضروری، عدد صحیح بین 1 تا 5)
+
+        comment: دیدگاه متنی (ضروری، حداقل 10 کاراکتر، حداکثر 300 کاراکتر)
+
+        doctor: آیدی دکتر (ضروری)
+      operationId: addMyReviewPatient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: string
+                  example: Very careful and positive.
+                doctor:
+                  type: string
+                  example: 683ae5d3264976ccf7239f27
+                rating:
+                  type: number
+                  example: 5
+            examples:
+              Add My Review (Patient):
+                value:
+                  comment: Very careful and positive.
+                  doctor: 683ae5d3264976ccf7239f27
+                  rating: 5
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+tags:
+  - name: Drugs
+    description: '## **رکوئست های مربوط به داروها**'
+  - name: Users
+    description: '## **رکوئست های مربوط به کاربران**'
+  - name: Authorization
+    description: '## **رکوئست های مربوط به احراز هویت**'
+  - name: Visits
+    description: '## **رکوئست های مربوط به ویزیت ها**'
+  - name: Doctors
+    description: '## **رکوئست های مربوط به دکترها**'
+  - name: Reviews
+    description: '## **رکوئست های مربوط به دیدگاه ها**'
