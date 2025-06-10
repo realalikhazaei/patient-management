@@ -97,7 +97,7 @@ const getOTP = async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    message: 'A one-time password has been sent to your phone number.',
+    message: 'رمز یکبار مصرف به تلفن همراه شما ارسال شد',
   });
 };
 
@@ -182,13 +182,13 @@ const forgotPassword = async (req, res, next) => {
 
     return res.status(500).json({
       status: 'error',
-      message: 'There has been a problem sending the email. Please try again later.',
+      message: 'مشکلی در ارسال ایمیل رخ داد. لطفا بعدا تلاش کنید',
     });
   }
 
   res.status(200).json({
     status: 'success',
-    message: 'A password reset link has been sent to your email.',
+    message: 'لینک بازیابی رمز به ایمیل شما ارسال شد',
   });
 };
 
@@ -285,13 +285,13 @@ const getVerifyEmailToken = async (req, res, next) => {
 
     return res.status(500).json({
       status: 'error',
-      message: 'There has been a problem sending the email. Please try again later.',
+      message: 'مشکلی در ارسال ایمیل رخ داد. لطفا بعدا تلاش کنید',
     });
   }
 
   res.status(200).json({
     status: 'success',
-    message: 'A email verification link has been sent to your email.',
+    message: 'لینک تائید ایمیل به آدرس ایمیل شما ارسال شد',
   });
 };
 
@@ -312,7 +312,7 @@ const verifyEmailToken = async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    message: 'Your email address has been verified successfully.',
+    message: 'آدرس ایمیل شما با موفقیت تائید شد',
   });
 };
 
