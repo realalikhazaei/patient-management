@@ -19,11 +19,11 @@ const prodErr = (err, res) => {
 
   res.status(500).json({
     status: 'error',
-    message: 'Something went wrong',
+    message: 'مشکلی پیش آمده است',
   });
 };
 
-const invalidIdErrDB = err => new AppError(`The ID is not correct ${err.value}`, 400);
+const invalidIdErrDB = err => new AppError(`${err.value} شناسه وارد شده معتبر نیست`, 400);
 
 const validationErrDB = err => {
   const message = Object.values(err.errors)
@@ -37,8 +37,8 @@ const uniqueErrDB = err => new AppError(err.message, 400);
 const compoundIndexErrDB = err => {
   const errorKind = err.message?.split(': ')[2];
   let message;
-  if (errorKind.startsWith('doctor_1_patient_1')) message = 'You have already written a comment for this doctor.';
-  if (errorKind.startsWith('doctor_1_dateTime_1')) message = 'This visit time is already taken.';
+  if (errorKind.startsWith('doctor_1_patient_1')) message = 'شما قبلا نظر خود را برای این دکتر ثبت کردید';
+  if (errorKind.startsWith('doctor_1_dateTime_1')) message = 'این زمان ملاقات قبلا رزرو شده است';
   return new AppError(message, 400);
 };
 

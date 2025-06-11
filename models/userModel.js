@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
   {
     password: {
       type: String,
-      minlength: [8, 'Password cannot be less than 8 characters.'],
+      minlength: [8, 'رمز عبور نمی تواند کمتر از 8 کاراکتر باشد'],
       select: false,
     },
     passwordConfirm: {
@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
         validator: function (val) {
           return val === this.password;
         },
-        message: 'Your passwords do not match.',
+        message: 'رمز عبور های شما مطابقت ندارند',
       },
     },
     passwordChangedAt: Date,
@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema(
       default: 'patient',
       enum: {
         values: ['patient', 'secretary', 'doctor', 'admin'],
-        message: 'User role can be either patient, secretary, doctor or admin',
+        message: '‫نقش کاربر می‌تواند patient، secretary، doctor یا admin باشد',
       },
     },
     active: {
@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema(
         validator: function (val) {
           return val.split(' ').length >= 2;
         },
-        message: 'Please provide your full name.',
+        message: 'لطفا نام کامل خود را وارد کنید',
       },
     },
     photo: {
@@ -55,37 +55,37 @@ const userSchema = new mongoose.Schema(
     },
     phone: {
       type: String,
-      minlength: [10, 'A phone number cannot be less than 10 characters.'],
-      maxlength: [10, 'A phone number cannot be more than 10 characters.'],
-      unique: [true, 'This phone number already exists.'],
+      minlength: [10, 'شماره تلفن نمی تواند کمتر از 10 کاراکتر باشد'],
+      maxlength: [10, 'شماره تلفن نمی تواند بیشتر از 10 کاراکتر باشد'],
+      unique: [true, 'این شماره تلفن قبلا استفاده شده است'],
       sparse: true,
     },
     newPhone: {
       type: String,
-      minlength: [10, 'A phone number cannot be less than 10 characters.'],
-      maxlength: [10, 'A phone number cannot be more than 10 characters.'],
-      unique: [true, 'This phone number already exists.'],
+      minlength: [10, 'شماره تلفن نمی تواند کمتر از 10 کاراکتر باشد'],
+      maxlength: [10, 'شماره تلفن نمی تواند بیشتر از 10 کاراکتر باشد'],
+      unique: [true, 'این شماره تلفن قبلا استفاده شده است'],
       sparse: true,
     },
     email: {
       type: String,
-      maxlength: [100, 'An email address cannot be more than 100 characters.'],
-      unique: [true, 'This email address already exists.'],
+      maxlength: [100, 'آدرس ایمیل نمی تواند بیشتر از 100 کاراکتر باشد'],
+      unique: [true, 'این آدرس ایمیل قبلا استفاده شده است'],
       sparse: true,
       validate: {
         validator: isEmail,
-        message: 'Please provide a valid email address.',
+        message: 'لطفا یک ایمیل معتبر وارد کنید',
       },
     },
     idCard: {
       type: String,
-      unique: [true, 'This ID card already exists.'],
+      unique: [true, 'این شماره ملی قبلا استفاده شده است'],
       sparse: true,
       validate: {
         validator: function (val) {
           return val.length === 10;
         },
-        message: 'The ID card number is not correct.',
+        message: 'شماره ملی صحیح نیست',
       },
     },
     birthday: {
@@ -94,7 +94,7 @@ const userSchema = new mongoose.Schema(
         validator: function (val) {
           return val < Date.now() && val.getYear() < 120;
         },
-        message: 'Please enter a valid range for birthday',
+        message: 'لطفا بازه معتبری برای تاریخ تولد وارد کنید',
       },
     },
     doctorOptions: {
@@ -131,18 +131,18 @@ const userSchema = new mongoose.Schema(
             'thoracic and cardiac surgery',
             'urology',
           ],
-          message: 'Please provide a valid specification',
+          message: 'لطفا یک تخصص معتبر وارد کنید',
         },
       },
       mcNumber: {
         type: String,
-        unique: [true, 'This medical council number already used.'],
+        unique: [true, 'این کد نظام پزشکی قبلا استفاده شده است'],
         sparse: true,
       },
       ratingsAverage: {
         type: Number,
         default: 1,
-        max: [5, 'Maximum amount for ratings average is 5.'],
+        max: [5, 'حداکثر مقدار برای میانگین امتیاز 5 است'],
         set: function (val) {
           return Math.round(val * 10) / 10;
         },
@@ -158,7 +158,7 @@ const userSchema = new mongoose.Schema(
             return val?.every(el => el <= 6 && el >= 0 && el % 1 === 0);
           },
         },
-        message: 'Please provide an integer between 0 to 6.',
+        message: 'لطفا یک عدد صحیح بین 0 تا 6 وارد کنید',
       },
       visitRange: {
         type: [String],

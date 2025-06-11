@@ -15,12 +15,12 @@ const visitSchema = new mongoose.Schema({
   },
   dateTime: {
     type: Date,
-    required: [true, 'Please provide the appointment date and time.'],
+    required: [true, 'لطفا تاریخ و زمان ملاقات را وارد کنید'],
     validate: {
       validator: function (val) {
         return val > Date.now() && val < Date.now() + process.env.VISIT_RANGE * 24 * 60 * 60 * 1000;
       },
-      message: 'You can only book an appointment within the next 30 days.',
+      message: 'شما فقط می‌توانید برای 30 روز آینده وقت ملاقات رزرو کنید.',
     },
   },
   prescriptions: [
@@ -29,7 +29,7 @@ const visitSchema = new mongoose.Schema({
       count: Number,
       usage: {
         type: String,
-        maxlength: [200, 'Drug usage cannot be more than 200 characters.'],
+        maxlength: [200, 'نحوه مصرف دارو نمی‌تواند بیشتر از 200 کاراکتر باشد'],
       },
     },
   ],

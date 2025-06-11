@@ -5,30 +5,30 @@ const reviewSchema = new mongoose.Schema(
   {
     rating: {
       type: Number,
-      required: [true, 'Rating is a required field.'],
+      required: [true, 'امتیاز یک فیلد ضروری است'],
       validate: {
         validator: function (val) {
           return val <= 5 && val >= 1 && val % 1 === 0;
         },
-        message: 'Rating can only be an integer between 1 to 5.',
+        message: 'امتیاز باید عددی صحیح بین 1 تا 5 باشد.',
       },
     },
     comment: {
       type: String,
-      required: [true, 'Comment is a required field.'],
-      maxlength: [300, 'A comment cannot be more than 300 characters.'],
-      minlength: [10, 'A comment cannot be less than 10 characters.'],
+      required: [true, 'متن دیدگاه یک فیلد ضروری است'],
+      maxlength: [300, 'یک دیدگاه نمی تواند بیشتر از 300 کاراکتر باشد.'],
+      minlength: [10, 'یک دیدگاه نمی تواند کمتر از 10 کاراکتر باشد.'],
       trim: true,
     },
     patient: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
-      required: [true, 'Patient ID is a required field.'],
+      required: [true, 'شناسه بیمار یک فیلد ضروری است'],
     },
     doctor: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
-      required: [true, 'Doctor ID is a required field.'],
+      required: [true, 'شناسه دکتر یک فیلد ضروری است'],
     },
   },
   {

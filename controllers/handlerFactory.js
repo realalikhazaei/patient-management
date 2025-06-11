@@ -15,7 +15,7 @@ exports.getAll = Model => async (req, res, next) => {
 
 exports.getOne = Model => async (req, res, next) => {
   const document = await Model.findOne(req.params);
-  if (!document) return next(new AppError('There is no document with provided information', 404));
+  if (!document) return next(new AppError('سندی با اطلاعات ارائه شده یافت نشد', 404));
 
   res.status(200).json({
     status: 'success',
@@ -34,7 +34,7 @@ exports.createOne = Model => async (req, res, next) => {
 
 exports.updateOne = Model => async (req, res, next) => {
   const document = await Model.findOneAndUpdate(req.params, req.body, { new: true, runValidators: true });
-  if (!document) return next(new AppError('There is no document with this ID', 404));
+  if (!document) return next(new AppError('سندی با این شناسه یافت نشد', 404));
 
   res.status(200).json({
     status: 'success',
@@ -44,7 +44,7 @@ exports.updateOne = Model => async (req, res, next) => {
 
 exports.deleteOne = Model => async (req, res, next) => {
   const document = await Model.findOneAndDelete(req.params);
-  if (!document) return next(new AppError('There is no document with this ID', 404));
+  if (!document) return next(new AppError('سندی با این شناسه یافت نشد', 404));
 
   res.status(204).json({
     status: 'success',

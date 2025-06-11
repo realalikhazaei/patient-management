@@ -798,7 +798,8 @@ paths:
 
         فیلدهای ضروری:
 
-        password: رمز (ضروری، حداقل 8 کاراکتر)  
+        password: رمز (ضروری، حداقل 8 کاراکتر) 
+         
         passwordConfirm: تائید رمز (ضروری، حداقل 8 کاراکتر)
       operationId: resetPasswordPublic
       requestBody:

@@ -42,16 +42,16 @@ const protectRoute = async (req, res, next) => {
   if (req.headers.authorization?.startsWith('Bearer') || req.cookies?.jwt) {
     token = req.headers.authorization?.split(' ')[1] || req.cookies?.jwt;
   }
-  if (!token) return next(new AppError('Please login first to access this route', 401));
+  if (!token) return next(new AppError('برای دسترسی به این مسیر ابتدا وارد شوید', 401));
 
   const payload = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
   const user = await User.findById(payload.id).select('+password');
-  if (!user) return next(new AppError('Your account has been deactivated. Please contact support.', 404));
+  if (!user) return next(new AppError('حساب شما غیرفعال شده است. لطفا با پشتیبان تماس بگیرید', 404));
 
   if (user.password) {
     const passwordChanged = user.passwordChangedAfter(payload.iat);
-    if (passwordChanged) return next(new AppError('Your password has been changed. Please login again.', 401));
+    if (passwordChanged) return next(new AppError('رمز شما تغییر یافته است. لطفا مجددا وارد شوید', 401));
   }
 
   req.user = user;
@@ -60,7 +60,7 @@ const protectRoute = async (req, res, next) => {
 
 const restrictTo = (...roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role)) return next(new AppError('You are not allowed to access this route.', 403));
+    if (!roles.includes(req.user.role)) return next(new AppError('شما اجازه دسترسی به این مسیر را ندارید', 403));
     return next();
   };
 };
@@ -79,7 +79,7 @@ const getOTP = async (req, res, next) => {
 
   //Checks uniqueness of newPhone
   if (newPhone && user?.phone === newPhone)
-    return next(new AppError('This phone number is already in use. Please try another one.'));
+    return next(new AppError('این شماره تماس در حال حاضر موجود است. لطفا شماره دیگری وارد نمائید'));
 
   //Secure newPhone field
   if (user?.newPhone) user.newPhone = undefined;
@@ -108,7 +108,7 @@ const signupEmail = async (req, res, next) => {
 
   const user = await User.create({ email, password, passwordConfirm });
 
-  await signSendToken(user._id, req, res, 'Your account has been created successfully.', 201);
+  await signSendToken(user._id, req, res, 'حساب شما با موفقیت ساخته شد', 201);
 };
 
 const signupDoctor = async (req, res, next) => {
@@ -127,7 +127,7 @@ const signupDoctor = async (req, res, next) => {
     doctorOptions: { specification, mcNumber },
   });
 
-  await signSendToken(doctor._id, req, res, 'Your account has been created successfully.', 201);
+  await signSendToken(doctor._id, req, res, 'حساب شما با موفقیت ساخته شد', 201);
 };
 
 const loginEmail = async (req, res, next) => {
@@ -136,37 +136,37 @@ const loginEmail = async (req, res, next) => {
   if (Object.keys(errors)?.length !== 0) return next(new AppError(Object.values(errors)[0], 400));
 
   const user = await User.findOne({ email }).select('+password');
-  if (!user.password) return next(new AppError('You have not specified a password for your account.', 400));
+  if (!user.password) return next(new AppError('شما برای حساب خود رمز عبور تعریف ننموده اید', 400));
 
   const correct = await user?.verifyPassword(password);
-  if (!user || !correct) return next(new AppError('There is no account with this email and password.', 404));
+  if (!user || !correct) return next(new AppError('حسابی با ایمیل و رمز وارد شده یافت نشد', 404));
 
-  await signSendToken(user._id, req, res, 'You have been logged in successfully.');
+  await signSendToken(user._id, req, res, 'شما با موفقیت وارد حساب شدید');
 };
 
 const loginPhone = async (req, res, next) => {
   const { phone, otp } = req.body;
 
   const user = await User.findOne({ phone }).select('+otp');
-  if (!user) return next(new AppError('There is no account with this phone number. Please sign up first.', 404));
+  if (!user) return next(new AppError('حسابی با این شماره تماس یافت نشد. لطفا ابتدا ثبت نام نمائید', 404));
 
   const expiredOTP = user.otpExpires < Date.now();
-  if (expiredOTP) return next(new AppError('Your one-time password has expired. Please try again.', 401));
+  if (expiredOTP) return next(new AppError('رمز یکبار مصرف شما منقضی شده است. لطفا مجددا تلاش کنید', 401));
 
   const correctOTP = await user.verifyOTP(otp);
-  if (!correctOTP) return next(new AppError('Your one-time password is wrong. Please try again.', 401));
+  if (!correctOTP) return next(new AppError('رمز یکبار مصرف شما اشتباه است. لطفا مجددا تلاش کنید', 401));
 
   user.otp = undefined;
   user.otpExpires = undefined;
   await user.save();
 
-  await signSendToken(user._id, req, res, 'You have been logged in successfully.');
+  await signSendToken(user._id, req, res, 'شما با موفقیت وارد حساب شدید');
 };
 
 const forgotPassword = async (req, res, next) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
-  if (!user) return next(new AppError('There is no user with this email address', 404));
+  if (!user) return next(new AppError('هیچ حسابی با این آدرس ایمیل یافت نشد', 404));
 
   const token = await user.createEmailToken('passwordReset');
   const url = `${req.protocol}://${req.get('host')}/api/v1/auth/reset-password/${token}`;
@@ -194,17 +194,17 @@ const forgotPassword = async (req, res, next) => {
 
 const resetPassword = async (req, res, next) => {
   const { token } = req.params;
-  if (!token) return next(new AppError('There is no password reset token. Please try again.', 400));
+  if (!token) return next(new AppError('توکن بازیابی رمز عبور یافت نشد. لطفا مجددا تلاش کنید', 400));
   const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
   const user = await User.findOne({ passwordResetToken: hashedToken, passwordResetExpires: { $gte: Date.now() } });
-  if (!user) return next(new AppError('Your password reset link is either wrong or expired. Please try again.', 401));
+  if (!user) return next(new AppError('لینک بازیابی رمز عبور شما اشتباه یا منقضی است. لطفا مجددا تلاش کنید', 401));
 
   const { password, passwordConfirm } = req.body;
   const errors = requiredField({ password, passwordConfirm });
   if (Object.keys(errors).length !== 0) return next(new AppError(Object.values(errors)[0], 400));
 
-  if (password !== passwordConfirm) return next(new AppError('Your passwords do not match.', 400));
+  if (password !== passwordConfirm) return next(new AppError('رمزهای شما مطابقت ندارند', 400));
 
   user.password = password;
   user.passwordConfirm = passwordConfirm;
@@ -212,17 +212,17 @@ const resetPassword = async (req, res, next) => {
   user.passwordResetExpires = undefined;
   await user.save();
 
-  await signSendToken(user._id, req, res, 'Your password has been reset successfully.');
+  await signSendToken(user._id, req, res, 'رمز شما با موفقیت بازیابی شد');
 };
 
 const updatePhone = async (req, res, next) => {
   const user = await User.findById(req.user._id).select('+otp');
 
   const expiredOTP = user.otpExpires < Date.now();
-  if (expiredOTP) return next(new AppError('Your one-time password has expired. Please try again.', 401));
+  if (expiredOTP) return next(new AppError('رمز یکبار مصرف شما منقضی شده است. لطفا مجددا تلاش کنید', 401));
 
   const correctOTP = await user.verifyOTP(req.body.otp);
-  if (!correctOTP) return next(new AppError('Your one-time password is wrong. Please try again.', 401));
+  if (!correctOTP) return next(new AppError('رمز یکبار مصرف شما اشتباه است. لطفا مجددا تلاش کنید', 401));
 
   if (user.newPhone) user.phone = user.newPhone;
   user.newPhone = undefined;
@@ -230,7 +230,7 @@ const updatePhone = async (req, res, next) => {
   user.otpExpires = undefined;
   await user.save();
 
-  await signSendToken(user._id, req, res, 'Your phone number has been updated successfully');
+  await signSendToken(user._id, req, res, 'شماره تلفن همراه شما با موفقیت ویرایش شد');
 };
 
 const updatePassword = async (req, res, next) => {
@@ -242,19 +242,19 @@ const updatePassword = async (req, res, next) => {
   if (Object.keys(errors).length !== 0) return next(new AppError(Object.values(errors)[0], 400));
 
   const correct = await user.verifyPassword(currentPassword);
-  if (!correct) return next(new AppError('Your current password is wrong.', 401));
+  if (!correct) return next(new AppError('رمز فعلی شما اشتباه است', 401));
 
   user.password = password;
   user.passwordConfirm = passwordConfirm;
   await user.save();
 
-  await signSendToken(user._id, req, res, 'Your password has been changed successfully');
+  await signSendToken(user._id, req, res, 'رمز شما با موفقیت تغییر یافت');
 };
 
 const setPassword = async (req, res, next) => {
   const user = await User.findById(req.user._id).select('+password');
 
-  if (user.password) return next(new AppError('You cannot use this route to change your password.', 400));
+  if (user.password) return next(new AppError('شما نمی توانید از این مسیر برای تغییر رمز خود استفاده کنید', 400));
 
   const { password, passwordConfirm } = req.body;
   const errors = requiredField({ password, passwordConfirm });
@@ -264,12 +264,12 @@ const setPassword = async (req, res, next) => {
   user.passwordConfirm = passwordConfirm;
   await user.save();
 
-  await signSendToken(user._id, req, res, 'Your password has been set successfully');
+  await signSendToken(user._id, req, res, 'رمز شما با موفقیت ثبت شد');
 };
 
 const getVerifyEmailToken = async (req, res, next) => {
   const user = await User.findById(req.user._id);
-  if (user.emailVerified) return next(new AppError('Your email has verified already.', 400));
+  if (user.emailVerified) return next(new AppError('آدرس ایمیل شما در حال حاضر تائید شده است', 400));
 
   const token = user.createEmailToken('emailVerify');
   const url = `${req.protocol}://${req.get('host')}/api/v1/auth/verify-email/${token}`;
@@ -297,13 +297,13 @@ const getVerifyEmailToken = async (req, res, next) => {
 
 const verifyEmailToken = async (req, res, next) => {
   const { token } = req.params;
-  if (!token) return next(new AppError('There is no email verification token. Please try again.', 400));
+  if (!token) return next(new AppError('توکن تائید آدرس ایمیل یافت نشد. لطفا مجددا تلاش کنید', 400));
   const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
   const user = await User.findById(req.user._id);
-  if (user.emailVerified) return next(new AppError('Your email is already verified.', 400));
+  if (user.emailVerified) return next(new AppError('آدرس ایمیل شما در حال حاضر تائید شده است', 400));
   if (user.emailVerifyToken !== hashedToken || user.emailVerifyExpires < Date.now())
-    return next(new AppError('Your email verification link is either wrong or expired. Please try again.', 401));
+    return next(new AppError('لینک تائید ایمیل شما اشتباه یا منقضی است. لطفا مجددا تلاش کنید', 401));
 
   user.emailVerified = true;
   user.emailVerifyToken = undefined;

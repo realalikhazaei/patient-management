@@ -21,7 +21,7 @@ const addPatientID = (req, res, next) => {
 
 const checkVisitTime = async (req, res, next) => {
   const { doctor, dateTime: visitTime } = req.body;
-  if (!doctor || !visitTime) return next(new AppError('Please provide both doctor ID and visit time data.', 400));
+  if (!doctor || !visitTime) return next(new AppError('لطفا اطلاعات دکتر و زمان ملاقات را وارد کنید', 400));
 
   const date = new Date(visitTime);
   const sameDay = new Date(`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
@@ -29,10 +29,10 @@ const checkVisitTime = async (req, res, next) => {
 
   const maxVisit = await Visit.findOne({ doctor, patient: req.user._id, dateTime: { $gt: sameDay, $lt: nextDay } });
   if (maxVisit?.id !== req.params?._id)
-    return next(new AppError('You cannot book more than one appointments per day.', 403));
+    return next(new AppError('شما قبلا یک ملاقات در این روز با این دکتر رزرو کردید', 403));
 
   const doctorAcc = await User.findById(doctor);
-  if (!doctorAcc?.checkValidVisitTime(date)) return next(new AppError('The visit time is not available.', 400));
+  if (!doctorAcc?.checkValidVisitTime(date)) return next(new AppError('زمان ملاقات خواسته شده قابل انتخاب نیست', 400));
 
   req.doctor = doctor;
   req.dateTime = date;
@@ -45,13 +45,13 @@ const bookMyVisit = async (req, res, next) => {
 
   //Request user info
   const { name, birthday, idCard } = user;
-  if (!name || !birthday || !idCard) return next(new AppError('Please complete your personal information first.', 400));
+  if (!name || !birthday || !idCard) return next(new AppError('لطفا ابتدا اطلاعات کاربری خود را کامل کنید', 400));
 
   const visit = await Visit.create({ doctor, patient: user._id, dateTime });
 
   res.status(201).json({
     status: 'success',
-    message: 'You have successfully booked an appointment.',
+    message: 'شما با موفقیت یک وقت ملاقات رزرو کردید.',
     data: visit,
   });
 };
@@ -93,7 +93,7 @@ const addPrescription = async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    message: 'Prescription has been added successfully.',
+    message: 'نسخه با موفقیت اضافه شد',
     data: visit,
   });
 };
@@ -103,7 +103,7 @@ const deletePrescription = async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    message: 'Prescription has been deleted successfully.',
+    message: 'نسخه با موفقیت حذف شد',
   });
 };
 
@@ -148,7 +148,7 @@ const closeAVisit = async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    message: 'The visit has been closed successfully',
+    message: 'ملاقات با موفقیت بسته شد',
   });
 };
 

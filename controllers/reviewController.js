@@ -25,13 +25,13 @@ const updateMyReview = (req, res, next) => {
 
 const addMyReview = async (req, res, next) => {
   const visit = await Visit.findOne({ doctor: req.body.doctor, patient: req.user._id, closed: true });
-  if (!visit) return next(new AppError('You do not have any closed visits with this doctor.', 403));
+  if (!visit) return next(new AppError('شما هیچ ملاقات پایان یافته‌ای با این دکتر ندارید', 403));
 
   const review = await Review.create({ ...req.body, patient: req.user._id });
 
   res.status(201).json({
     status: 'success',
-    message: 'Your review has been submitted successfully.',
+    message: 'نظر شما با موفقیت ثبت شد',
     data: review,
   });
 };

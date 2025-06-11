@@ -40,7 +40,7 @@ const updateMe = async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    message: 'Your account has been updated successfully',
+    message: 'حساب شما با موفقیت به‌روزرسانی شد',
   });
 };
 
@@ -51,7 +51,7 @@ const deleteMe = async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    message: 'Your account has been deleted successfully',
+    message: 'حساب شما با موفقیت حذف شد',
   });
 };
 
@@ -64,7 +64,7 @@ const updateDoctor = async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    message: 'Your working preferences has been updated successfully.',
+    message: 'تنظیمات کاری شما با موفقیت به‌روزرسانی شد.',
     data: doctor,
   });
 };
@@ -100,14 +100,14 @@ const getDoctor = async (req, res, next) => {
 const addSecretary = async (req, res, next) => {
   const { user: _id, doctor } = req.body;
 
-  if (!_id) return next(new AppError('Please provide the user ID.', 400));
-  if (!doctor) return next(new AppError('Please provide the doctor ID.', 400));
+  if (!_id) return next(new AppError('لطفا شناسه کاربر را وارد کنید', 400));
+  if (!doctor) return next(new AppError('لطفا شناسه دکتر را وارد کنید', 400));
 
   const user = await User.findByIdAndUpdate(_id, { doctor, role: 'secretary' }, { new: true, runValidators: true });
 
   res.status(200).json({
     status: 'success',
-    message: 'The user has been marked as a secretary successfully.',
+    message: 'کاربر با موفقیت به عنوان منشی ثبت شد',
     data: user,
   });
 };
