@@ -69,6 +69,16 @@ const updateDoctor = async (req, res, next) => {
   });
 };
 
+const getDoctors = (req, res, next) => {
+  ['patient', 'secretary', 'admin'].forEach(el => {
+    delete req.query?.[el];
+    delete req.params?.[el];
+  });
+  req.params.role = 'doctor';
+  req.params.fields = '-idCard,-email,-createdAt,-updatedAt,-active';
+  next();
+};
+
 const getDoctor = async (req, res, next) => {
   const doctor = await User.findOne({ _id: req.params._id, role: 'doctor' })
     .select('-idCard -email -createdAt -updatedAt -active')
@@ -83,7 +93,6 @@ const getDoctor = async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    results: doctor.visits.length,
     data: doctor,
   });
 };
@@ -114,6 +123,7 @@ module.exports = {
   updateMe,
   deleteMe,
   updateDoctor,
+  getDoctors,
   getDoctor,
   addSecretary,
 };
