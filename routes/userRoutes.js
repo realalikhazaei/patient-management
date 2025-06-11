@@ -10,6 +10,7 @@ const {
   updateMe,
   deleteMe,
   updateDoctor,
+  getDoctors,
   getDoctor,
   addSecretary,
 } = require('../controllers/userController');
@@ -18,6 +19,7 @@ const { protectRoute, restrictTo } = require('../controllers/authController');
 const router = express.Router();
 
 router.get('/doctor/:_id', getDoctor);
+router.get('/doctor', getDoctors, getAllUsers);
 
 router.use(protectRoute);
 

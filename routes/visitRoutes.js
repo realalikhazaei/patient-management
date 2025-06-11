@@ -35,7 +35,7 @@ router.patch('/:_id/doctor/close-visit', restrictTo('doctor', 'secretary'), addD
 
 router
   .route('/:_id/patient')
-  .all(addPatientID)
+  .all(restrictTo('patient'), addPatientID)
   .get(getVisit)
   .patch(checkVisitTime, updateMyVisit, updateVisit)
   .delete(deleteMyVisit, deleteVisit);
