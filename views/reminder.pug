@@ -1,0 +1,28 @@
+extends baseEmail
+
+block content
+  .container
+  .header
+    h1 Visit Date Reminder
+  .content
+    p Dear #{data.patient.name},
+    p
+      | This is a reminder about your upcoming visit on tomorrow. Below are the full details of your visit:
+    table.details-table
+      tr
+        td Doctor Name
+        td #{data.doctor.name}
+      tr
+        td Date
+        td= `${new Intl.DateTimeFormat('en-US', {month: 'short', day: 'numeric', weekday: 'short'}).format(data.dateTime)}`
+      tr
+        td Time
+        td= `${new Intl.DateTimeFormat('en-US', {hour: 'numeric', minute: 'numeric'}).format(data.dateTime)}`
+
+    p
+      | If you have any questions or special requirements, please don't hesitate to contact us.
+    p We look forward to seeing you there!
+    p
+      | Warm regards
+      br
+      | Patient Management System

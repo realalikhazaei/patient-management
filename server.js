@@ -2,8 +2,8 @@
 require('dotenv').config({ path: 'config.env' });
 const mongoose = require('mongoose');
 const app = require('./app');
-// require('./jobs/scheduler');
-// require('./jobs/worker');
+require('./jobs/scheduler');
+require('./jobs/worker');
 
 process.on('unhandledRejection', err => {
   console.log('-----------------------UNHANDLED REJECTION-----------------------');

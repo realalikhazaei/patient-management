@@ -173,7 +173,7 @@ const forgotPassword = async (req, res, next) => {
   const text = `Here is your password reset token:\n${url}\n\nPlease ignore this message if you haven't asked for one.`;
 
   try {
-    await new Email(user, text).sendResetPassword();
+    await new Email(user).sendResetPassword(text);
     await user.save();
   } catch (err) {
     user.passwordResetToken = undefined;
@@ -276,7 +276,7 @@ const getVerifyEmailToken = async (req, res, next) => {
   const text = `Here is your email verification link:\n${url}\n\n`;
 
   try {
-    await new Email(user, text).sendVerifyEmail();
+    await new Email(user).sendVerifyEmail(text);
     await user.save();
   } catch (err) {
     user.emailVerifyToken = undefined;
