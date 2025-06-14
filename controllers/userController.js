@@ -30,7 +30,8 @@ const processPhoto = async (req, res, next) => {
 };
 
 const updateMe = async (req, res, next) => {
-  const { name, photo, birthday, idCard, email } = req.body;
+  const { name, birthday, idCard, email } = req.body;
+  const { photo } = req.body.photo === 'undefined' ? req.user : req.body;
 
   const user = await User.findByIdAndUpdate(
     req.user._id,
