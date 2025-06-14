@@ -45,7 +45,7 @@ const Email = class {
       text,
     };
 
-    await this.createTransport().sendMail(mailOptions);
+    await this.transporter().sendMail(mailOptions);
   }
 
   async sendResetPassword(text) {
