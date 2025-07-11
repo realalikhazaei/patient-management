@@ -1,6 +1,7 @@
 const sharp = require('sharp');
 const factory = require('./handlerFactory');
 const User = require('../models/userModel');
+const Visit = require('../models/visitModel');
 const AppError = require('../utils/appError');
 const multerUpload = require('../utils/multer');
 
@@ -81,20 +82,20 @@ const getDoctors = (req, res, next) => {
 };
 
 const getDoctor = async (req, res, next) => {
+  const today = new Date();
+  const sameDay = new Date(`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`);
+
   const doctor = await User.findOne({ _id: req.params._id, role: 'doctor' })
     .select('-idCard -email -createdAt -updatedAt -active')
-    .populate({
-      path: 'visits',
-      select: 'dateTime closed',
-    })
     .populate({
       path: 'reviews',
       select: 'rating comment',
     });
+  const visits = await Visit.find({ doctor: req.params._id, dateTime: { $gt: sameDay } }).select('dateTime closed');
 
   res.status(200).json({
     status: 'success',
-    data: doctor,
+    data: { ...doctor._doc, reviews: doctor.reviews, visits },
   });
 };
 
