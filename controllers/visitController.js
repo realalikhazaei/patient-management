@@ -115,7 +115,7 @@ const addDoctorID = (req, res, next) => {
 const getDoctorVisit = async (req, res, next) => {
   const visit = await Visit.findOne({ _id: req.params._id, doctor: req.user._id }).populate({
     path: 'patient',
-    select: 'name idCard birthday photo',
+    select: 'name idCard birthday photo phone',
   });
 
   res.status(200).json({
@@ -131,7 +131,7 @@ const getTodayVisits = async (req, res, next) => {
 
   const visits = await Visit.find({ doctor: req.params.doctor, dateTime: { $gt: sameDay, $lt: nextDay } }).populate({
     path: 'patient',
-    select: 'name idCard',
+    select: 'name idCard birthday photo phone',
   });
 
   res.status(200).json({
