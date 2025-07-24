@@ -72,8 +72,8 @@ const updateDoctor = async (req, res, next) => {
 
 const getDoctors = (req, res, next) => {
   ['patient', 'secretary', 'admin'].forEach(el => {
-    delete req.query?.[el];
-    delete req.params?.[el];
+    delete req.query.role?.[el];
+    delete req.params.role?.[el];
   });
   req.params.role = 'doctor';
   req.params.fields = '-idCard,-email,-createdAt,-updatedAt,-active';
@@ -91,6 +91,8 @@ const getDoctor = async (req, res, next) => {
       path: 'reviews',
       select: 'rating comment',
     });
+
+  if (!doctor) return next(new AppError('There is no doctor with this ID.'));
 
   res.status(200).json({
     status: 'success',
