@@ -56,6 +56,18 @@ const deleteMe = async (req, res, next) => {
   });
 };
 
+const getMe = async (req, res) => {
+  const user = req.user._doc;
+  const allowedFields = ['_id', 'name', 'photo', 'email', 'idCard', 'role'];
+
+  Object.keys(user).forEach(key => !allowedFields.includes(key) && delete user[key]);
+
+  res.status(200).json({
+    status: 'success',
+    data: user,
+  });
+};
+
 const updateDoctor = async (req, res, next) => {
   const values = {};
   for (const [key, value] of Object.entries(req.body)) {
@@ -123,6 +135,7 @@ module.exports = {
   processPhoto,
   updateMe,
   deleteMe,
+  getMe,
   updateDoctor,
   getDoctors,
   getDoctor,
