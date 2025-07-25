@@ -430,6 +430,26 @@ paths:
           type: string
           example: ''
         description: با مقدار آیدی جایگزین شود
+  /api/v1/users/get-my-info:
+    get:
+      tags:
+        - Users
+      summary: Get My Info (All Users)
+      description: >-
+        **\--دریافت اطلاعات حساب کاربری--**
+
+
+        از طریق این ریکوئست می توان اطلاعات فرد لاگین شده را دریافت کرد. این
+        ریکوئست مناسب رندر کردن اطلاعات پس از لاگین کردن است.
+
+
+        توجه: این ریکوئست تنها به توکن احراز هویت نیاز دارد.
+      operationId: getMyInfoAllUsers
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
   /api/v1/users/update-account:
     patch:
       tags:

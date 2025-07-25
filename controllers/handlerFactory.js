@@ -3,7 +3,10 @@ const APIFeatures = require('../utils/apiFeatures');
 
 exports.getAll = Model => async (req, res, next) => {
   const query = { ...req.query, ...req.params };
-  const features = new APIFeatures(Model.find(), query).filter().sort().projection().pagination();
+  const dbQuery =
+    Model.modelName === 'Visit' ? Model.find().populate({ path: 'patient', select: 'name phone' }) : Model.find();
+
+  const features = new APIFeatures(dbQuery, query).filter().sort().projection().pagination();
   const documents = await features.queryObj;
 
   res.status(200).json({
