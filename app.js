@@ -21,6 +21,9 @@ app.use(morgan('dev'));
 //Body-parser with body payload limit
 app.use(express.json({ limit: '10kb' }));
 
+//Serve static files
+app.use(express.static('public'));
+
 //Compress response objects
 app.use(compression());
 
