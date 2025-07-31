@@ -73,7 +73,13 @@ app.use((req, res, next) => {
 });
 
 //Enable CORS
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
+  }),
+);
 
 //API Docs
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));

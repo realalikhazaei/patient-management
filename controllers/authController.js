@@ -19,9 +19,11 @@ const signSendToken = async (id, req, res, message, statusCode = 200) => {
   const token = await promisify(jwt.sign)({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
 
   res.cookie('jwt', token, {
-    expires: new Date(Date.now() + process.env.COOKIE_EXPIRES * 24 * 60 * 60 * 1000),
+    expires: new Date(Date.now() + +process.env.COOKIE_EXPIRES * 24 * 60 * 60 * 1000),
     httpOnly: true,
     secure: req.protocol === 'https',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    SameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
   });
 
   res.status(statusCode).json({
