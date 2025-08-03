@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const compression = require('compression');
 const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
 const drugRouter = require('./routes/drugRoutes');
 const userRouter = require('./routes/userRoutes');
 const authRouter = require('./routes/authRoutes');
@@ -17,6 +18,9 @@ const app = express();
 
 //Logger middleware
 app.use(morgan('dev'));
+
+//Cookie parser
+app.use(cookieParser());
 
 //Body-parser with body payload limit
 app.use(express.json({ limit: '10kb' }));
