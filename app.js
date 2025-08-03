@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const compression = require('compression');
 const helmet = require('helmet');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const swaggerUI = require('swagger-ui-express');
 const swaggerDoc = require('./docs/swaggerDoc');
 const drugRouter = require('./routes/drugRoutes');
@@ -20,6 +21,9 @@ const app = express();
 
 //Logger middleware
 app.use(morgan('dev'));
+
+//Cookie parser
+app.use(cookieParser());
 
 //Body-parser with body payload limit
 app.use(express.json({ limit: '10kb' }));

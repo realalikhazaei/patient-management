@@ -59,7 +59,7 @@ const deleteMe = async (req, res, next) => {
 
 const getMe = async (req, res) => {
   const user = req.user._doc;
-  const allowedFields = ['_id', 'name', 'photo', 'email', 'idCard', 'role'];
+  const allowedFields = ['_id', 'name', 'photo', 'email', 'idCard', 'role', 'birthday'];
 
   Object.keys(user).forEach(key => !allowedFields.includes(key) && delete user[key]);
 
