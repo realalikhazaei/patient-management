@@ -4,6 +4,7 @@ const compression = require('compression');
 const helmet = require('helmet');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 const swaggerUI = require('swagger-ui-express');
 const swaggerDoc = require('./docs/swaggerDoc');
 const drugRouter = require('./routes/drugRoutes');
@@ -24,6 +25,17 @@ app.use(morgan('dev'));
 
 //Cookie parser
 app.use(cookieParser());
+
+app.use(
+  cookieSession({
+    name: 'session',
+    maxAge: process.env.COOKIE_EXPIRES * 24 * 60 * 60 * 1000,
+    keys: [process.env.SESSION_KEY1, process.env.SESSION_KEY2],
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+  }),
+);
 
 //Body-parser with body payload limit
 app.use(express.json({ limit: '10kb' }));
@@ -80,7 +92,7 @@ app.use((req, res, next) => {
 app.use(
   cors({
     credentials: true,
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:5173', 'http://127.0.0.1:8080'],
     methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
   }),
 );

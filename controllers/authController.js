@@ -26,6 +26,8 @@ const signSendToken = async (id, req, res, message, statusCode = 200) => {
     SameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
   });
 
+  req.session.jwt = token;
+
   res.status(statusCode).json({
     status: 'success',
     message,
@@ -41,8 +43,8 @@ const trimPhoneNumber = (req, res, next) => {
 
 const protectRoute = async (req, res, next) => {
   let token;
-  if (req.headers.authorization?.startsWith('Bearer') || req.cookies?.jwt) {
-    token = req.headers.authorization?.split(' ')[1] || req.cookies?.jwt;
+  if (req.headers.authorization?.startsWith('Bearer') || req.cookies?.jwt || req.session?.jwt) {
+    token = req.headers.authorization?.split(' ')[1] || req.cookies?.jwt || req.session?.jwt;
   }
   if (!token) return next(new AppError('برای دسترسی به این مسیر ابتدا وارد شوید', 401));
 
