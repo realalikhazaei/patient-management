@@ -316,6 +316,17 @@ const verifyEmailToken = async (req, res, next) => {
   });
 };
 
+const logout = (req, res) => {
+  res.cookie('jwt', 'loggedout', {
+    expires: new Date(Date.now() + 10000),
+  });
+
+  return res.status(200).json({
+    status: 'success',
+    message: 'شما با موفقیت از حساب خود خارج شدید',
+  });
+};
+
 module.exports = {
   trimPhoneNumber,
   protectRoute,
@@ -332,4 +343,5 @@ module.exports = {
   setPassword,
   getVerifyEmailToken,
   verifyEmailToken,
+  logout,
 };
