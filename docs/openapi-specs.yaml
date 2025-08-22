@@ -564,6 +564,21 @@ paths:
           description: ''
       security:
         - bearerAuth: []
+  /api/v1/auth/logout:
+    get:
+      tags:
+        - Authorization
+      summary: Logout (Public)
+      description: >-
+        \--خروج از حساب کاربری--
+
+
+        اجرای این رکوئست باعث حذف شدن کوکی حاوی توکن احراز هویت و در نتیجه خروج
+        از حساب کاربری میشود
+      operationId: logoutPublic
+      responses:
+        '200':
+          description: ''
   /api/v1/auth/verify-email/{token}:
     post:
       tags:

@@ -14,6 +14,7 @@ const {
   setPassword,
   getVerifyEmailToken,
   verifyEmailToken,
+  logout,
 } = require('../controllers/authController');
 
 const router = express.Router();
@@ -26,6 +27,8 @@ router.post('/sign-up/email/doctor', signupDoctor);
 router.post('/sign-up/email', signupEmail);
 router.post('/login/email', loginEmail);
 router.post('/login/phone', loginPhone);
+
+router.get('/logout', logout);
 
 router.post('/forgot-password', forgotPassword);
 router.patch('/reset-password/:token', resetPassword);

@@ -26,7 +26,7 @@ const signSendToken = async (id, req, res, message, statusCode = 200) => {
     SameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
   });
 
-  req.session.jwt = token;
+  // req.session.jwt = token;
 
   res.status(statusCode).json({
     status: 'success',
@@ -320,6 +320,17 @@ const verifyEmailToken = async (req, res, next) => {
   });
 };
 
+const logout = (req, res) => {
+  res.cookie('jwt', 'loggedout', {
+    expires: new Date(Date.now() + 10000),
+  });
+
+  return res.status(200).json({
+    status: 'success',
+    message: 'شما با موفقیت از حساب خود خارج شدید',
+  });
+};
+
 module.exports = {
   trimPhoneNumber,
   protectRoute,
@@ -336,4 +347,5 @@ module.exports = {
   setPassword,
   getVerifyEmailToken,
   verifyEmailToken,
+  logout,
 };
